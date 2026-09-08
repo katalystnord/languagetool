@@ -53,12 +53,21 @@ public class SwedishDisambiguationRuleTest {
     TestTools.myAssert("Att testa ... disambiguering",
         "/[null]SENT_START Att/[att]KN  /[null]null testa/[testa]VB:IMP|testa/[testa]VB:INF  /[null]null ./[...]<ELLIPS> ./[null]null ./[...]</ELLIPS>  /[null]null/[null]SENT_START disambiguering/[null]null", tokenizer, sentenceTokenizer, tagger, disambiguator);
 
+    // en/[man]PN is new since the SALDO merge, same verified pattern as
+    // SwedishTaggerTest ("en" as colloquial object form of pronoun "man").
     TestTools.myAssert("Att testa disambiguering är, en passant, kul.",
-        "/[null]SENT_START Att/[att]KN  /[null]null testa/[testa]VB:IMP|testa/[testa]VB:INF  /[null]null disambiguering/[null]null  /[null]null är/[vara]VB:PRS ,/[null]null  /[null]null en/[en passant]<NN:OF:SIN:NOM:UTR>|en/[en]NN:OF:SIN:NOM:UTR|en/[en]PN  /[null]null passant/[en passant]</NN:OF:SIN:NOM:UTR> ,/[null]null  /[null]null kul/[kul]JJ:PU ./[null]null", tokenizer, sentenceTokenizer, tagger, disambiguator);
+        "/[null]SENT_START Att/[att]KN  /[null]null testa/[testa]VB:IMP|testa/[testa]VB:INF  /[null]null disambiguering/[null]null  /[null]null är/[vara]VB:PRS ,/[null]null  /[null]null en/[en passant]<NN:OF:SIN:NOM:UTR>|en/[en]NN:OF:SIN:NOM:UTR|en/[en]PN|en/[man]PN  /[null]null passant/[en passant]</NN:OF:SIN:NOM:UTR> ,/[null]null  /[null]null kul/[kul]JJ:PU ./[null]null", tokenizer, sentenceTokenizer, tagger, disambiguator);
+    // Lanka/[lanka]NN:OF:SIN:NOM:UTR is new: SALDO has a genuine standalone
+    // lemma "lanka" (lemgram lanka..nn.1); kept alongside the "Sri Lanka"
+    // multi-word chunk reading, not replacing it, correct disambiguator
+    // behavior is to preserve both.
     TestTools.myAssert("Te från Sri Lanka är mycket gott.",
-        "/[null]SENT_START Te/[te]NN:OF:NON:NOM:UTR|Te/[te]NN:OF:SIN:NOM:NEU|Te/[te]VB:IMP|Te/[te]VB:INF  /[null]null från/[från]PP  /[null]null Sri/[Sri Lanka]<PM:NOM>  /[null]null Lanka/[Sri Lanka]</PM:NOM>  /[null]null är/[vara]VB:PRS  /[null]null mycket/[mycken]JJ:PN|mycket/[mycket]AB  /[null]null gott/[god]JJ:PN|gott/[gott]AB ./[null]null", tokenizer, sentenceTokenizer, tagger, disambiguator);
+        "/[null]SENT_START Te/[te]NN:OF:NON:NOM:UTR|Te/[te]NN:OF:SIN:NOM:NEU|Te/[te]VB:IMP|Te/[te]VB:INF  /[null]null från/[från]PP  /[null]null Sri/[Sri Lanka]<PM:NOM>  /[null]null Lanka/[Sri Lanka]</PM:NOM>|Lanka/[lanka]NN:OF:SIN:NOM:UTR  /[null]null är/[vara]VB:PRS  /[null]null mycket/[mycken]JJ:PN|mycket/[mycket]AB  /[null]null gott/[god]JJ:PN|gott/[gott]AB ./[null]null", tokenizer, sentenceTokenizer, tagger, disambiguator);
+    // fuskandet and nivå were previously untagged ([null]null); both now
+    // correctly tagged from SALDO ("nivå" = level, common gender; "fuskandet"
+    // = definite form of "fuskande", a neuter -ande gerund noun from "fuska").
     TestTools.myAssert("VW-skandalen tog fuskandet till en ny nivå.",
-        "VW-skandalen/[null]null -- tog/[ta]VB:PRT -- fuskandet/[null]null -- till/[till]AB|till/[till]PP -- en/[en]NN:OF:SIN:NOM:UTR|en/[en]PN -- ny/[ny]JJ:PU -- nivå/[null]null", tokenizer, tagger);
+        "VW-skandalen/[null]null -- tog/[ta]VB:PRT -- fuskandet/[fuskande]NN:BF:SIN:NOM:NEU -- till/[till]AB|till/[till]PP -- en/[en]NN:OF:SIN:NOM:UTR|en/[en]PN|en/[man]PN -- ny/[ny]JJ:PU -- nivå/[nivå]NN:OF:SIN:NOM:UTR", tokenizer, tagger);
 
     TestTools.myAssert("Test ...",
         "/[null]SENT_START Test/[test]NN:OF:PLU:NOM:NEU|Test/[test]NN:OF:SIN:NOM:NEU|Test/[test]NN:OF:SIN:NOM:UTR  /[null]null ./[...]<ELLIPS> ./[null]null ./[...]</ELLIPS>", tokenizer, sentenceTokenizer, tagger, disambiguator);
