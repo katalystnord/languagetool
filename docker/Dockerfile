@@ -51,10 +51,17 @@ COPY . .
 # ones (e.g. a security-scanning plugin) not actually needed for `package`,
 # which pulls in a large legacy dependency tree for no benefit here, we don't
 # need the Docker-layer-caching split it was for.
+# -Dmaven.gitcommitid.skip=true: git-commit-id-maven-plugin needs a real
+# .git directory to embed the build's commit hash, which a git-context
+# COPY doesn't include (unlike an actual `git clone`, tried first, that
+# had its own worse problem, see the note above). Losing the embedded
+# commit hash from the startup log is an acceptable trade for a build that
+# can't go stale.
 RUN --mount=type=cache,target=/root/.m2 \
     --mount=type=bind,from=hostm2,target=/root/.m2-seed,ro \
     cp -an /root/.m2-seed/. /root/.m2/ 2>/dev/null; \
-    mvn --projects languagetool-standalone --also-make package -DskipTests --quiet
+    mvn -Dmaven.gitcommitid.skip=true \
+    --projects languagetool-standalone --also-make package -DskipTests --quiet
 
 RUN unzip /languagetool/languagetool-standalone/target/LanguageTool-*.zip -d /dist && \
     mv /dist/LanguageTool-* /dist/LanguageTool
