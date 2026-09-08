@@ -1,11 +1,21 @@
-﻿[Source: https://extensions.libreoffice.org/extensions/swedish-spelling-dictionary-den-stora-svenska-ordlistan]
+[Source: https://github.com/yeager/hunspell-sv, commit de721f0f58dc70b0ce469f437cf258ec1a47b8e3]
 
-Denna svenska ordlista för rättstavning underhålls av
-Göran Andersson <goran@init.se>.
+This dictionary builds on "Den stora svenska ordlistan" / SFOL, originally
+maintained by Göran Andersson <goran@init.se>
+(https://extensions.libreoffice.org/extensions/swedish-spelling-dictionary-den-stora-svenska-ordlistan),
+extended with data from SALDO/SALDOM (Språkbanken Text, CC BY 4.0),
+Folkets Lexikon (KTH), Datatermgruppen's IT terminology, SAOL 15, and
+translation-memory entries from Swedish open-source software localization.
+See https://github.com/yeager/hunspell-sv for the full source breakdown.
 
 ************ COPYRIGHT ************
 
-Copyright © 2003-19 Göran Andersson <goran@init.se>.
+Copyright © 2003-19 Göran Andersson <goran@init.se>, plus subsequent
+contributions from the hunspell-sv project.
 
 Denna ordlista är tillgänglig under licensen GNU Lesser General Public License Version 3.
 Licenstexten finns på adressen http://www.gnu.org/licenses/lgpl-3.0.html .
+
+SALDO/SALDOM content is separately licensed CC BY 4.0 by Språkbanken Text,
+University of Gothenburg (https://spraakbanken.gu.se/en/resources/saldo);
+retained here per that license's attribution requirement.

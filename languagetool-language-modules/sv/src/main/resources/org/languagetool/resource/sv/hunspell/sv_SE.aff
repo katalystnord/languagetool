@@ -2,6 +2,7 @@ SET UTF-8
 TRY aerndtislogmkpbhfjuväcöåyqxzvwéâàáèóćńłšőř:-.
 
 # note: colon removed for LanguageTool, to avoid errors for words ending in ":"
+# (carried forward from the previous sv_SE.aff when upgrading to hunspell-sv)
 WORDCHARS -0123456789.
 
 BREAK 3
@@ -16,11 +17,11 @@ FORBIDDENWORD %
 NEEDAFFIX ¤
 
 # At least this many letters in each word within a compound:
-COMPOUNDMIN 1
+COMPOUNDMIN 2
 #COMPOUNDMIN 3
 
 # Only two, three or four word compounds:
-#COMPOUNDWORDMAX 4
+COMPOUNDWORDMAX 4
 
 # Disallow triple letters, like "fall"+"lucka":
 CHECKCOMPOUNDTRIPLE
