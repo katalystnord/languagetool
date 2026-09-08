@@ -110,6 +110,38 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <message>Adjektivet "\2" är böjt i positiv neutrum och bör då föregås av ordet "ett" istället för "en", alternativt böjas i positiv utrum. <suggestion>ett \2 \3</suggestion></message>
       <example correction="ett mörkt rum">Det var <marker>en mörkt rum</marker>. </example>
     </rule>
+    <rule id="DEN.JJ.NEUTRAL_n-ord.NN" name="Rätt bestämd artikel (den/det)">
+      <pattern>
+        <token>den</token>
+        <token postag="JJ:BF">
+          <!-- "hela" (whole) overwhelmingly starts fixed adverbial phrases
+               ("hela tiden", "hela dagen", ...) unrelated to a preceding
+               den/det that just happens to sit before them, verified
+               against real corpus text (UD Talbanken + LinES, ~11.7k
+               sentences) before excluding rather than assuming. "bra" is
+               invariant (same form as adjective and adverb), also excluded. -->
+          <exception regexp="yes">hela|bra</exception>
+        </token>
+        <token postag="NN:BF:S.*:NEU" postag_regexp="yes"/>
+      </pattern>
+      <message>Substantivet "\3" är neutrum (ett-ord) och bör då föregås av "det" istället för "den". Menade du: <suggestion>det \2 \3</suggestion>?</message>
+      <example correction="det stora huset">Jag såg <marker>den stora huset</marker>.</example>
+      <example>Han höll den hela tiden.</example>
+    </rule>
+    <rule id="DET.JJ.UTRUM_t-ord.NN" name="Rätt bestämd artikel (den/det)">
+      <pattern>
+        <token>det</token>
+        <token postag="JJ:BF">
+          <!-- see DEN.JJ.NEUTRAL_n-ord.NN above for why these are excluded -->
+          <exception regexp="yes">hela|bra</exception>
+        </token>
+        <token postag="NN:BF:S.*:UTR" postag_regexp="yes"/>
+      </pattern>
+      <message>Substantivet "\3" är utrum (en-ord) och bör då föregås av "den" istället för "det". Menade du: <suggestion>den \2 \3</suggestion>?</message>
+      <example correction="den stora bilen">Jag såg <marker>det stora bilen</marker>.</example>
+      <example>Han klarar det bra redan nu.</example>
+      <example>Jag visste det hela tiden.</example>
+    </rule>
     <rule id="ART_VB.n-ord" name="Rätt kongruensböjning av artikel">
       <pattern>
         <token>ett</token>
