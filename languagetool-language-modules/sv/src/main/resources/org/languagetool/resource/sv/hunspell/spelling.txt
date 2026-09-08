@@ -1,2 +1,11 @@
 # Words that extend the spell checker. See ignore.txt for words that should be
 # completely ignored (i.e. not used to create suggestions).
+
+# Recent loanwords/terms confirmed missing from the current hunspell dictionary
+# by testing candidate words against a local build (2026-09-08). Not exhaustive,
+# just what testing turned up so far.
+chatbot
+crowdfunda
+GPT
+greenwashing
+prompting
