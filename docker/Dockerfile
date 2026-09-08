@@ -10,9 +10,17 @@
 #
 # Dropped: the ARM64 workarounds upstream carries (terra is x86_64) and the
 # version ARG (we build a git ref, not a release tag).
-
-ARG REPO=https://github.com/katalystnord/languagetool.git
-ARG REF=sv-improvements
+#
+# Builds from the Docker build context directly (COPY), not an internal
+# `git clone`: pass a git URL as context to build a specific remote ref
+# without transferring files (docker build -f docker/Dockerfile
+# 'https://github.com/katalystnord/languagetool.git#sv-improvements'), or a
+# local checkout to build uncommitted changes. An internal git clone was
+# tried first and caused a real bug: BuildKit cached that RUN layer by
+# command text, not by the remote branch's actual commit, so a rebuild
+# after a new push silently reused stale source. COPY from the context
+# doesn't have this problem, the context itself is freshly resolved (or
+# is the live local tree) on every build.
 
 FROM debian:bookworm AS build
 
@@ -22,17 +30,15 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update -y && \
     apt-get install -y --no-install-recommends \
-        locales bash libgomp1 openjdk-17-jdk-headless git maven unzip xmlstarlet
+        locales bash libgomp1 openjdk-17-jdk-headless maven unzip xmlstarlet
 
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=en_US.UTF-8
 ENV LANG=en_US.UTF-8
 
-ARG REPO
-ARG REF
-RUN git clone "$REPO" --depth 1 -b "$REF" /languagetool
 WORKDIR /languagetool
+COPY . .
 
 # Seeds the build cache from the host's own ~/.m2 (already warm from building
 # this same project locally) instead of re-downloading everything; falls back
