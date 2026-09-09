@@ -247,6 +247,39 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <message>Substantivet "\2" är utrum (en-ord) och styr då "vår" istället för "vårt". Menade du: <suggestion>vår \2</suggestion>?</message>
       <example correction="vår bil">Vi sålde <marker>vårt bil</marker>.</example>
     </rule>
+    <rule id="ER.NEUTRAL_n-ord.NN" name="Rätt genus på possessivpronomen (er/ert)">
+      <pattern>
+        <token>er</token>
+        <token postag="NN:OF:S.*:NEU" postag_regexp="yes">
+          <!-- "er" is riskier than the other possessives: it doubles as the
+               object-pronoun form of "ni" (you), so "vi bryr er om ...",
+               "jag ger er ..." etc. are extremely common and put all sorts
+               of unrelated nouns right after "er". Confirmed 3 real cases
+               against corpus text before excluding: "men" (but) also means
+               "harm/injury" (archaic legal, neuter); "väl" (well/probably)
+               also means "weal/welfare" (neuter); "dussintals" (dozens of,
+               a quantifier) is also the genitive of "dussintal" (a
+               dozen-count, neuter). Same "grund"/"var" ambiguities as the
+               other NEU-matching possessive rules apply here too. -->
+          <exception regexp="yes">grund|var|men|väl|dussintals</exception>
+        </token>
+      </pattern>
+      <message>Substantivet "\2" är neutrum (ett-ord) och styr då "ert" istället för "er". Menade du: <suggestion>ert \2</suggestion>?</message>
+      <example correction="ert hus">Ni sålde <marker>er hus</marker>.</example>
+      <example>Det brydde ni er väl inte om?</example>
+      <example>Jag förklarade varför samtalet gick till er men inte varför.</example>
+      <example>Jag skulle kunna ge er dussintals exempel.</example>
+    </rule>
+    <rule id="ERT.UTRUM_t-ord.NN" name="Rätt genus på possessivpronomen (er/ert)">
+      <pattern>
+        <token>ert</token>
+        <token postag="NN:OF:S.*:UTR" postag_regexp="yes">
+          <exception>för</exception>
+        </token>
+      </pattern>
+      <message>Substantivet "\2" är utrum (en-ord) och styr då "er" istället för "ert". Menade du: <suggestion>er \2</suggestion>?</message>
+      <example correction="er bil">Ni sålde <marker>ert bil</marker>.</example>
+    </rule>
     <rule id="ART_VB.n-ord" name="Rätt kongruensböjning av artikel">
       <pattern>
         <token>ett</token>
