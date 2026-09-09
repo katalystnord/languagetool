@@ -225,6 +225,28 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <message>Substantivet "\2" är utrum (en-ord) och styr då "din" istället för "ditt". Menade du: <suggestion>din \2</suggestion>?</message>
       <example correction="din bil">Du sålde <marker>ditt bil</marker>.</example>
     </rule>
+    <rule id="VAR.NEUTRAL_n-ord.NN" name="Rätt genus på possessivpronomen (vår/vårt)">
+      <pattern>
+        <token>vår</token>
+        <token postag="NN:OF:S.*:NEU" postag_regexp="yes">
+          <!-- same "grund"/"var" ambiguities as the other NEU-matching
+               possessive rules above -->
+          <exception regexp="yes">grund|var</exception>
+        </token>
+      </pattern>
+      <message>Substantivet "\2" är neutrum (ett-ord) och styr då "vårt" istället för "vår". Menade du: <suggestion>vårt \2</suggestion>?</message>
+      <example correction="vårt hus">Vi sålde <marker>vår hus</marker>.</example>
+    </rule>
+    <rule id="VART.UTRUM_t-ord.NN" name="Rätt genus på possessivpronomen (vår/vårt)">
+      <pattern>
+        <token>vårt</token>
+        <token postag="NN:OF:S.*:UTR" postag_regexp="yes">
+          <exception>för</exception>
+        </token>
+      </pattern>
+      <message>Substantivet "\2" är utrum (en-ord) och styr då "vår" istället för "vårt". Menade du: <suggestion>vår \2</suggestion>?</message>
+      <example correction="vår bil">Vi sålde <marker>vårt bil</marker>.</example>
+    </rule>
     <rule id="ART_VB.n-ord" name="Rätt kongruensböjning av artikel">
       <pattern>
         <token>ett</token>
