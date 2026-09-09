@@ -142,6 +142,38 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <example>Han klarar det bra redan nu.</example>
       <example>Jag visste det hela tiden.</example>
     </rule>
+    <rule id="SIN.NEUTRAL_n-ord.NN" name="Rätt genus på reflexivt possessivpronomen (sin/sitt)">
+      <pattern>
+        <token>sin</token>
+        <token postag="NN:OF:S.*:NEU" postag_regexp="yes">
+          <!-- "grund" (foundation/basis) is overwhelmingly used as utrum
+               ("sin grund" = its basis, in the very common "ha sin grund
+               i" construction); it also has a genuine but rare neuter
+               reading ("ett grund" = a shoal/shallows), verified against
+               real corpus text (UD Talbanken + LinES) before excluding. -->
+          <exception>grund</exception>
+        </token>
+      </pattern>
+      <message>Substantivet "\2" är neutrum (ett-ord) och styr då "sitt" istället för "sin". Menade du: <suggestion>sitt \2</suggestion>?</message>
+      <example correction="sitt hus">Han sålde <marker>sin hus</marker>.</example>
+      <example>Den gemenskapen har sin grund i familjen.</example>
+    </rule>
+    <rule id="SITT.UTRUM_t-ord.NN" name="Rätt genus på reflexivt possessivpronomen (sin/sitt)">
+      <pattern>
+        <token>sitt</token>
+        <token postag="NN:OF:S.*:UTR" postag_regexp="yes">
+          <!-- "för" is overwhelmingly a preposition/conjunction/adverb; its
+               rare noun reading ("en för" = a ship's bow) false-matched
+               "göra sitt för att ..." (a fixed idiom, "do one's part",
+               where "sitt" doesn't govern "för" at all), verified against
+               real corpus text before excluding. -->
+          <exception>för</exception>
+        </token>
+      </pattern>
+      <message>Substantivet "\2" är utrum (en-ord) och styr då "sin" istället för "sitt". Menade du: <suggestion>sin \2</suggestion>?</message>
+      <example correction="sin bil">Han sålde <marker>sitt bil</marker>.</example>
+      <example>Kommissionen kommer att göra sitt för att föra arbetet framåt.</example>
+    </rule>
     <rule id="ART_VB.n-ord" name="Rätt kongruensböjning av artikel">
       <pattern>
         <token>ett</token>
