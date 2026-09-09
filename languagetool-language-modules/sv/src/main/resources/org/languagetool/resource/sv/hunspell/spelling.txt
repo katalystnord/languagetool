@@ -9,3 +9,13 @@ crowdfunda
 GPT
 greenwashing
 prompting
+
+# Capitalized (sentence-initial) forms of the above. Words added here don't
+# get the automatic case-flexibility regular hunspell dictionary entries
+# have, confirmed by testing: "Crowdfunda är kul." flagged as misspelled
+# while "vi testar crowdfunda här." didn't (2026-09-09). GPT is already
+# all-caps so needs no separate entry.
+Chatbot
+Crowdfunda
+Greenwashing
+Prompting
