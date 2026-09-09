@@ -62,11 +62,18 @@ public class SwedishTaggerTest {
 
     TestTools.myAssert("Nato-vänliga länder har blivit fler.",
         "Nato-vänliga/[null]null -- länder/[land]NN:OF:PLU:NOM:NEU|länder/[länd]NN:OF:PLU:NOM:UTR|länder/[lända]VB:PRS -- har/[ha]VB:PRS -- blivit/[bli]VB:SUP -- fler/[mången]JJ:K", tokenizer, tagger);
-    // s/[s]NN:OF:SIN:NOM:NEU is new: SALDO has "s" (the letter name) as a
-    // genuine, if narrow, noun lemgram (s..nn.1). Real ambiguity, not a bug,
-    // disambiguation is a separate concern from tagging.
+    // s/[s]NN:OF:SIN:NOM:NEU and s/[s]NN:OF:PLU:NOM:NEU are new: SALDO has
+    // "s" (the letter name) as a genuine, if narrow, noun lemgram (s..nn.1),
+    // paradigm nn_6n_frx, a zero-plural neuter noun like "hus" where
+    // singular and plural indefinite share one spelling. Both readings are
+    // real SALDO data (sg indef nom = "s", pl indef nom = "s"); only the
+    // singular one survived earlier because of a merge_sources.py dedup bug
+    // that dropped every SALDO reading after the first for a (form, lemma)
+    // pair not already in the pre-SALDO dictionary, fixed 2026-09-09, see
+    // implementation-plan.md. Real ambiguity, not a bug, disambiguation is a
+    // separate concern from tagging.
     TestTools.myAssert("FN:s nya projekt.",
-        "FN/[FN]PM:NOM:ACR -- s/[s]NN:OF:SIN:NOM:NEU -- nya/[ny]JJ:BF|nya/[ny]JJ:P -- projekt/[projekt]NN:OF:PLU:NOM:NEU|projekt/[projekt]NN:OF:SIN:NOM:NEU", tokenizer, tagger);
+        "FN/[FN]PM:NOM:ACR -- s/[s]NN:OF:PLU:NOM:NEU|s/[s]NN:OF:SIN:NOM:NEU -- nya/[ny]JJ:BF|nya/[ny]JJ:P -- projekt/[projekt]NN:OF:PLU:NOM:NEU|projekt/[projekt]NN:OF:SIN:NOM:NEU", tokenizer, tagger);
 
     // Du/[Du]PN is new: SALDO has a separate lemma for capitalized "Du", the
     // formal/polite letter-writing convention, distinct from lowercase "du".
