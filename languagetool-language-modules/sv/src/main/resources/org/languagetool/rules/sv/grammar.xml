@@ -151,7 +151,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                i" construction); it also has a genuine but rare neuter
                reading ("ett grund" = a shoal/shallows), verified against
                real corpus text (UD Talbanken + LinES) before excluding. -->
-          <exception>grund</exception>
+          <exception regexp="yes">grund|var</exception>
         </token>
       </pattern>
       <message>Substantivet "\2" är neutrum (ett-ord) och styr då "sitt" istället för "sin". Menade du: <suggestion>sitt \2</suggestion>?</message>
@@ -173,6 +173,57 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <message>Substantivet "\2" är utrum (en-ord) och styr då "sin" istället för "sitt". Menade du: <suggestion>sin \2</suggestion>?</message>
       <example correction="sin bil">Han sålde <marker>sitt bil</marker>.</example>
       <example>Kommissionen kommer att göra sitt för att föra arbetet framåt.</example>
+    </rule>
+    <rule id="MIN.NEUTRAL_n-ord.NN" name="Rätt genus på possessivpronomen (min/mitt)">
+      <pattern>
+        <token>min</token>
+        <token postag="NN:OF:S.*:NEU" postag_regexp="yes">
+          <!-- "grund": same ambiguity as SIN.NEUTRAL_n-ord.NN above. "var"
+               is overwhelmingly the past tense of "vara" (was), but has a
+               real, rare neuter noun reading ("var" = pus, medical), which
+               matched "min var" where "min" is itself being used as a noun
+               ("en min" = a facial expression/countenance) rather than a
+               possessive, e.g. "hennes min var inte bara kosmetisk" (her
+               expression was not just cosmetic), verified against real
+               corpus text before excluding. -->
+          <exception regexp="yes">grund|var</exception>
+        </token>
+      </pattern>
+      <message>Substantivet "\2" är neutrum (ett-ord) och styr då "mitt" istället för "min". Menade du: <suggestion>mitt \2</suggestion>?</message>
+      <example correction="mitt hus">Jag sålde <marker>min hus</marker>.</example>
+      <example>Det är fantastiskt hur min grund höll under stormen.</example>
+      <example>Moderns omedgörliga min var inte bara kosmetisk.</example>
+    </rule>
+    <rule id="MITT.UTRUM_t-ord.NN" name="Rätt genus på possessivpronomen (min/mitt)">
+      <pattern>
+        <token>mitt</token>
+        <token postag="NN:OF:S.*:UTR" postag_regexp="yes">
+          <!-- same "för" ambiguity as SITT.UTRUM_t-ord.NN above -->
+          <exception>för</exception>
+        </token>
+      </pattern>
+      <message>Substantivet "\2" är utrum (en-ord) och styr då "min" istället för "mitt". Menade du: <suggestion>min \2</suggestion>?</message>
+      <example correction="min bil">Jag sålde <marker>mitt bil</marker>.</example>
+    </rule>
+    <rule id="DIN.NEUTRAL_n-ord.NN" name="Rätt genus på possessivpronomen (din/ditt)">
+      <pattern>
+        <token>din</token>
+        <token postag="NN:OF:S.*:NEU" postag_regexp="yes">
+          <exception regexp="yes">grund|var</exception>
+        </token>
+      </pattern>
+      <message>Substantivet "\2" är neutrum (ett-ord) och styr då "ditt" istället för "din". Menade du: <suggestion>ditt \2</suggestion>?</message>
+      <example correction="ditt hus">Du sålde <marker>din hus</marker>.</example>
+    </rule>
+    <rule id="DITT.UTRUM_t-ord.NN" name="Rätt genus på possessivpronomen (din/ditt)">
+      <pattern>
+        <token>ditt</token>
+        <token postag="NN:OF:S.*:UTR" postag_regexp="yes">
+          <exception>för</exception>
+        </token>
+      </pattern>
+      <message>Substantivet "\2" är utrum (en-ord) och styr då "din" istället för "ditt". Menade du: <suggestion>din \2</suggestion>?</message>
+      <example correction="din bil">Du sålde <marker>ditt bil</marker>.</example>
     </rule>
     <rule id="ART_VB.n-ord" name="Rätt kongruensböjning av artikel">
       <pattern>
