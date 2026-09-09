@@ -270,6 +270,30 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <example>Jag förklarade varför samtalet gick till er men inte varför.</example>
       <example>Jag skulle kunna ge er dussintals exempel.</example>
     </rule>
+    <!-- Tried and deliberately NOT added: predicative adjective agreement
+         (NOUN + copula + adjective, e.g. "Huset är stor" -> "stort").
+         Verified against the full treebank corpus (2026-09-09) and found
+         genuinely unsafe, not just missing a short exception list: 16 false
+         positives in 11,734 sentences, from two distinct, compounding
+         causes. (1) Lexical: many common intensifying adverbs (helt, litet,
+         väsentligt, betydligt, avogt, ...) are formed from an adjective's
+         neuter form plus no visible change ("-t" is both the neuter
+         adjective ending and the regular adverb-from-adjective ending in
+         Swedish), so they carry a stray JJ:PN reading and get misread as
+         the predicative adjective itself, e.g. "bilen är helt torr" matches
+         on "helt", never reaching the real (correctly inflected) "torr".
+         This is a systematic, productive word-formation pattern, not a
+         handful of coincidences, no realistic exception list closes it.
+         (2) Structural: the noun immediately before a copula isn't reliably
+         the grammatical subject, e.g. "Mitt första samtal med direktören
+         var egendomligt" matches "direktören" (object of a preposition) as
+         if it were the subject, missing the true, more distant subject
+         "samtal" entirely. Fixing this needs real subject-finding, not
+         3-token adjacency. Left here as a documented dead end so this
+         specific approach isn't re-attempted without a different design
+         (e.g. requiring the adverb-derived-from-adjective ambiguity to be
+         resolved some other way, or a fundamentally different pattern that
+         doesn't assume subject-adjacency). See implementation-plan.md. -->
     <rule id="ERT.UTRUM_t-ord.NN" name="Rätt genus på possessivpronomen (er/ert)">
       <pattern>
         <token>ert</token>
