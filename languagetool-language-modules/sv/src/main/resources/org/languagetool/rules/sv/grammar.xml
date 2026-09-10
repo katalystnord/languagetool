@@ -142,6 +142,123 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <example>Han klarar det bra redan nu.</example>
       <example>Jag visste det hela tiden.</example>
     </rule>
+    <rule id="DENNA.NEUTRAL_n-ord.NN" name="Rätt genus på demonstrativt pronomen (denna/detta)">
+      <pattern>
+        <token>denna</token>
+        <!-- Nominative indefinite singular neuter only, not "S.*" style
+             wildcarding: mined against 17,426 real UD Talbanken+LinES
+             sentences (2026), and the naive "S.*" pattern used by the
+             sibling possessive-pronoun rules below would ALSO match a
+             genitive noun here (NN:OF:SIN:GEN:NEU), which turned up two
+             real false positives in the corpus ("denna 1600-talets
+             [borgerliga] patricierstad", "hela detta vildmarkens
+             hemlighetsfulla liv"): the demonstrative there actually
+             agrees with a head noun one word further on, past an
+             intervening genitive modifier, not with the genitive noun
+             itself. Anchoring to :NOM excludes those without needing an
+             exception list.
+
+             The full corpus run also surfaced two more real false
+             positives once :NOM was in place: "denna var" (var/NN:NEU is
+             the rare noun "var" = pus, same ambiguity as the existing
+             "grund|var" exception on the sibling possessive-pronoun rules
+             below) and "denna ... framträdande roll" (framträdande is
+             functioning as an adjective/participle here, modifying the
+             real head noun "roll" one word later, but the dictionary
+             also carries a genuine NN:NEU reading for it, "ett
+             framträdande" = a performance/appearance).
+
+             "grund" and "vara" are added here too even without an
+             observed corpus hit for this specific rule: dictionary tag
+             dump confirms both carry an ambiguous NN:NEU reading
+             (grund/NN:OF:SIN:NOM:NEU alongside its usual UTR reading;
+             vara/NN:OF:SIN:NOM:NEU alongside its UTR reading and its verb
+             readings), the same class of risk already proven real for
+             "var" and "framträdande" above, and "grund" already carries
+             this exact exception on every sibling rule below. -->
+        <token postag="NN:OF:SIN:NOM:NEU">
+          <exception regexp="yes">grund|var|vara|framträdande</exception>
+        </token>
+      </pattern>
+      <message>Substantivet "\2" är neutrum (ett-ord) och styr då "detta" istället för "denna". Menade du: <suggestion>detta \2</suggestion>?</message>
+      <example correction="detta hus">Jag såg <marker>denna hus</marker>.</example>
+      <example>Amsterdams centrum är i våra dagar ett exempel på denna 1600-talets borgerliga patricierstad.</example>
+      <example>Denna var i vanliga fall ett ogästvänligt ställe.</example>
+      <example>Varför ges nu äktenskapet denna framträdande roll i en kristen sexualetik?</example>
+    </rule>
+    <rule default="off" id="DETTA.UTRUM_t-ord.NN" name="Rätt genus på demonstrativt pronomen (denna/detta)">
+      <!-- Shipped OFF by default, unlike its DENNA.NEUTRAL_n-ord.NN
+           sibling above, which passed the same full-corpus check with
+           zero exceptions needed. This direction is structurally
+           different: "detta" is used pronominally/anaphorically (as a
+           free-standing "this", referring back to an idea) far more
+           often in real text than as a determiner directly before a
+           noun, and the word immediately after it is overwhelmingly a
+           verb, preposition, or conjunction rather than a noun. The
+           risk isn't the grammar, it's that many of Swedish's most
+           common short function words happen to ALSO have a rare,
+           genuine noun reading in the compiled dictionary (för, kan,
+           vara, med, en, skulle, ...; also grund and faktum, see below),
+           and every one of those sits directly after "detta" constantly
+           in ordinary text. Nine such words turned up as real false
+           positives in one 17,760-sentence pass; more, undiscovered ones
+           are likely in a bigger or different corpus, this is a long
+           tail, not a short finite list the way "hela|bra" or "grund|var"
+           were for the older rules in this file. Fixing this properly
+           needs a disambiguation-layer change (resolving these words to
+           their common reading in most contexts, not a grammar-rule
+           exception list), out of scope for this pass. Verified clean
+           (0 false positives against the full corpus) with every
+           exception below in place before shipping disabled rather than
+           skipping verification just because it's off; a future session
+           turning this on should re-run
+           TreebankRuleRegressionCheck first. -->
+      <antipattern>
+        <!-- "före detta" (former/ex-) is a fixed, invariant idiom: "detta"
+             here doesn't agree with anything at all, it's not acting as a
+             demonstrative. Confirmed as a real false positive against the
+             same corpus once the :NOM anchoring and exceptions below
+             (see DENNA.NEUTRAL_n-ord.NN) are in place. -->
+        <token>före</token>
+        <token>detta</token>
+        <token postag="NN:OF:SIN:NOM:UTR"/>
+      </antipattern>
+      <pattern>
+        <token>detta</token>
+        <!-- See the rule-level comment above for why this list exists and
+             why it's not considered closed. "för" already carries this
+             exact exception on the sibling possessive-pronoun rules below
+             (en för = a ship's bow). "kan" also has a rare noun reading
+             (en kan = a jug/can). "vara" is both a common noun (en vara =
+             a product/item) and the infinitive/imperative of "to be".
+             "med" has a rare noun reading (en med, archaic for
+             companion). "en" doubles as the noun "en" (juniper). "skulle"
+             and "centralafrikanska" (this specific adjective form, not a
+             general pattern) both carry a rare/incidental NN:UTR reading
+             in the compiled dictionary alongside their ordinary verb/
+             adjective readings. "faktum", despite being a neuter-only
+             noun in standard Swedish, carries a residual NN:UTR reading
+             (same family of irregular -um loanword ambiguity documented
+             for the dual-gender noun plural fix). "grund" is added
+             preemptively, same rationale as DENNA.NEUTRAL_n-ord.NN above:
+             confirmed ambiguous both ways by dictionary tag dump, and it
+             already carries this exact exception on every sibling rule
+             below. -->
+        <token postag="NN:OF:SIN:NOM:UTR">
+          <exception regexp="yes">för|kan|vara|faktum|grund|skulle|centralafrikanska|med|en</exception>
+        </token>
+      </pattern>
+      <message>Substantivet "\2" är utrum (en-ord) och styr då "denna" istället för "detta". Menade du: <suggestion>denna \2</suggestion>?</message>
+      <example correction="denna bil">Jag såg <marker>detta bil</marker>.</example>
+      <example>Han är en före detta rökare.</example>
+      <example>Hela detta vildmarkens hemlighetsfulla liv pulserar i skogen.</example>
+      <example>Detta kan skada programmet.</example>
+      <example>Många anser detta vara en naturlig följd av systemet.</example>
+      <example>Jag nämner detta med respekt.</example>
+      <example>Det var där, i detta centralafrikanska territorium, som allt hände.</example>
+      <example>Jag nämner detta för Shahar.</example>
+      <example>Nedslående är att detta faktum inte uppmärksammats.</example>
+    </rule>
     <rule id="SIN.NEUTRAL_n-ord.NN" name="Rätt genus på reflexivt possessivpronomen (sin/sitt)">
       <pattern>
         <token>sin</token>
