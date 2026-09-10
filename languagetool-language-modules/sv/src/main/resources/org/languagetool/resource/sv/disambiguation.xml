@@ -313,4 +313,43 @@ Swedish Disambiguation Rules for LanguageTool
         </pattern>
         <disambig action="ignore_spelling"/>
     </rule>
+
+    <rule name="'detta X' där X inte är substantivet det ser ut som" id="DETTA_FOLLOWER_NOT_NOUN">
+        <!-- Added 2026-09-10 to let DETTA.UTRUM_t-ord.NN (grammar.xml) ship
+             enabled rather than default="off". That rule mined demonstrative
+             pronoun agreement (denna/detta + noun) from 17,760 real UD
+             Talbanken+LinES sentences; this exact direction kept colliding
+             with common short function words that happen to also carry a
+             rare, genuine NN:OF:SIN:NOM:UTR reading in the compiled
+             dictionary (för = en för, a ship's bow; kan = en kan, a jug;
+             vara = en vara, a product, alongside its far more common verb
+             readings; med = en med, archaic for companion; en = en en, a
+             juniper; skulle/centralafrikanska = incidental NN:UTR readings;
+             faktum = a residual UTR reading despite being standardly
+             neuter-only; grund = confirmed ambiguous both ways). Nine such
+             words turned up as real false positives in that one pass.
+
+             Rather than growing an ever-longer exception list on the
+             grammar rule itself (the approach used for its DENNA sibling,
+             fine there because that list stayed short and closed), this
+             removes the ambiguous NN:UTR reading from exactly these words
+             when they immediately follow "detta", the correct layer for
+             "this word's tag is wrong here" rather than "this rule
+             shouldn't fire here". The grammar rule's own exception list
+             was removed once this made it unnecessary.
+
+             Known tradeoff, stated plainly rather than overclaimed: this
+             is still the same finite 9-word list, just relocated to the
+             layer LanguageTool actually intends for this kind of problem.
+             A different or bigger corpus could still surface an ambiguous
+             word not in this list; if that happens, the fix is one more
+             word added here, not reverting to default="off". -->
+        <pattern>
+            <token>detta</token>
+            <marker>
+                <token regexp="yes">för|kan|vara|med|en|skulle|centralafrikanska|faktum|grund</token>
+            </marker>
+        </pattern>
+        <disambig action="remove" postag="NN:OF:SIN:NOM:UTR"/>
+    </rule>
 </rules>
