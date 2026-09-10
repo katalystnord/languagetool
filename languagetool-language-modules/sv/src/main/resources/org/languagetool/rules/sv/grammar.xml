@@ -129,6 +129,35 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <example>Han höll den hela tiden.</example>
     </rule>
     <rule id="DET.JJ.UTRUM_t-ord.NN" name="Rätt bestämd artikel (den/det)">
+      <antipattern>
+        <!-- "för det X" (för det första/andra/tredje...) is a fixed
+             idiomatic sentence/clause-opener ("firstly"/"secondly"/...),
+             invariant regardless of what noun happens to follow, found as
+             a real false positive against the full corpus: "För det
+             första ändringen av begreppet godkänd sökande...", "För det
+             första upphovsmännen.", "För det första:" all use this
+             pattern as a heading/label, not as genuine "det" + adjective
+             + noun agreement, confirmed by checking every "för det X"
+             occurrence in Talbanken+LinES, all shaped this way, none was
+             a genuine attributive use. Only "första" is attested in this
+             corpus, but the idiom itself isn't specific to it (för det
+             andra/tredje/... are the same construction), so this matches
+             any JJ:BF rather than hardcoding "första". Same idiom-antipattern
+             shape as "före detta" on DETTA.UTRUM_t-ord.NN below.
+
+             Known tradeoff, not airtight: "för" is also an ordinary
+             preposition, so a genuine mid-sentence error of the exact
+             same shape ("...för det första bilen jag köpte...", lowercase,
+             not sentence-initial) would also be suppressed by this
+             antipattern and go uncaught. Accepted deliberately, same
+             precision-over-recall bias as the rest of this project; no
+             such case was found in the corpus, and every real hit for
+             this exact shape was the idiom. -->
+        <token>för</token>
+        <token>det</token>
+        <token postag="JJ:BF"/>
+        <token postag="NN:BF:S.*:UTR" postag_regexp="yes"/>
+      </antipattern>
       <pattern>
         <token>det</token>
         <token postag="JJ:BF">
@@ -141,6 +170,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <example correction="den stora bilen">Jag såg <marker>det stora bilen</marker>.</example>
       <example>Han klarar det bra redan nu.</example>
       <example>Jag visste det hela tiden.</example>
+      <example>För det första ändringen av begreppet godkänd sökande, som tillåter alla personer.</example>
     </rule>
     <rule id="DENNA.NEUTRAL_n-ord.NN" name="Rätt genus på demonstrativt pronomen (denna/detta)">
       <pattern>
@@ -186,8 +216,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <example>Denna var i vanliga fall ett ogästvänligt ställe.</example>
       <example>Varför ges nu äktenskapet denna framträdande roll i en kristen sexualetik?</example>
     </rule>
-    <rule default="off" id="DETTA.UTRUM_t-ord.NN" name="Rätt genus på demonstrativt pronomen (denna/detta)">
-      <!-- Shipped OFF by default, unlike its DENNA.NEUTRAL_n-ord.NN
+    <rule id="DETTA.UTRUM_t-ord.NN" name="Rätt genus på demonstrativt pronomen (denna/detta)">
+      <!-- Shipped OFF by default at first, unlike its DENNA.NEUTRAL_n-ord.NN
            sibling above, which passed the same full-corpus check with
            zero exceptions needed. This direction is structurally
            different: "detta" is used pronominally/anaphorically (as a
@@ -195,24 +225,24 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
            often in real text than as a determiner directly before a
            noun, and the word immediately after it is overwhelmingly a
            verb, preposition, or conjunction rather than a noun. The
-           risk isn't the grammar, it's that many of Swedish's most
-           common short function words happen to ALSO have a rare,
-           genuine noun reading in the compiled dictionary (för, kan,
-           vara, med, en, skulle, ...; also grund and faktum, see below),
-           and every one of those sits directly after "detta" constantly
-           in ordinary text. Nine such words turned up as real false
-           positives in one 17,760-sentence pass; more, undiscovered ones
-           are likely in a bigger or different corpus, this is a long
-           tail, not a short finite list the way "hela|bra" or "grund|var"
-           were for the older rules in this file. Fixing this properly
-           needs a disambiguation-layer change (resolving these words to
-           their common reading in most contexts, not a grammar-rule
-           exception list), out of scope for this pass. Verified clean
-           (0 false positives against the full corpus) with every
-           exception below in place before shipping disabled rather than
-           skipping verification just because it's off; a future session
-           turning this on should re-run
-           TreebankRuleRegressionCheck first. -->
+           risk was that many of Swedish's most common short function
+           words happen to ALSO have a rare, genuine noun reading in the
+           compiled dictionary (för, kan, vara, med, en, skulle, ...;
+           also grund and faktum), and every one of those sits directly
+           after "detta" constantly in ordinary text. Nine such words
+           turned up as real false positives in one 17,760-sentence pass.
+
+           Enabled 2026-09-10 after fixing this at the correct layer:
+           DETTA_FOLLOWER_NOT_NOUN in disambiguation.xml now removes the
+           ambiguous NN:OF:SIN:NOM:UTR reading from exactly these nine
+           words when they immediately follow "detta", so this rule's own
+           pattern below no longer needs (or carries) an exception list
+           for them at all, cleaner than growing one here the way the
+           older rules in this file do. Re-verified 0 false positives
+           against the full corpus after the change, same
+           TreebankRuleRegressionCheck as before. See the disambiguation
+           rule's own comment for the tradeoff this still doesn't remove:
+           it's the same finite 9-word list, just correctly placed. -->
       <antipattern>
         <!-- "före detta" (former/ex-) is a fixed, invariant idiom: "detta"
              here doesn't agree with anything at all, it's not acting as a
@@ -225,28 +255,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       </antipattern>
       <pattern>
         <token>detta</token>
-        <!-- See the rule-level comment above for why this list exists and
-             why it's not considered closed. "för" already carries this
-             exact exception on the sibling possessive-pronoun rules below
-             (en för = a ship's bow). "kan" also has a rare noun reading
-             (en kan = a jug/can). "vara" is both a common noun (en vara =
-             a product/item) and the infinitive/imperative of "to be".
-             "med" has a rare noun reading (en med, archaic for
-             companion). "en" doubles as the noun "en" (juniper). "skulle"
-             and "centralafrikanska" (this specific adjective form, not a
-             general pattern) both carry a rare/incidental NN:UTR reading
-             in the compiled dictionary alongside their ordinary verb/
-             adjective readings. "faktum", despite being a neuter-only
-             noun in standard Swedish, carries a residual NN:UTR reading
-             (same family of irregular -um loanword ambiguity documented
-             for the dual-gender noun plural fix). "grund" is added
-             preemptively, same rationale as DENNA.NEUTRAL_n-ord.NN above:
-             confirmed ambiguous both ways by dictionary tag dump, and it
-             already carries this exact exception on every sibling rule
-             below. -->
-        <token postag="NN:OF:SIN:NOM:UTR">
-          <exception regexp="yes">för|kan|vara|faktum|grund|skulle|centralafrikanska|med|en</exception>
-        </token>
+        <token postag="NN:OF:SIN:NOM:UTR"/>
       </pattern>
       <message>Substantivet "\2" är utrum (en-ord) och styr då "denna" istället för "detta". Menade du: <suggestion>denna \2</suggestion>?</message>
       <example correction="denna bil">Jag såg <marker>detta bil</marker>.</example>
