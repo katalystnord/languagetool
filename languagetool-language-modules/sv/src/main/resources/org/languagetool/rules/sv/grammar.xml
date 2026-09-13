@@ -135,6 +135,52 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <message>Adjektivet "\2" är böjt i positiv neutrum och bör då föregås av ordet "ett" istället för "en", alternativt böjas i positiv utrum. <suggestion>ett \2 \3</suggestion></message>
       <example correction="ett mörkt rum">Det var <marker>en mörkt rum</marker>. </example>
     </rule>
+    <!-- Tried and deliberately NOT added: bare adjective+noun gender
+         mismatch with no determiner ("stor hus"-class, roadmap.md Phase
+         C2 item 1, agreement-rule-design.md §4 item 1). Implemented as
+         JJ.NEUTRAL_n-ord.NN/JJ.UTRUM_t-ord.NN (JJ:PU/JJ:PN immediately
+         followed by an opposite-gender indefinite singular noun, no
+         leading determiner required, correction via the synthesizer),
+         verified against the full 17,760-sentence Talbanken+LinES
+         corpus via TreebankRuleRegressionCheck, and rejected: 650 and
+         1176 false positives respectively even with an initial
+         invariant-adjective exception list (hela/bra, matching the
+         determiner-anchored siblings above); adding known culprits
+         found in the failures (rätt, fel, yttre, inre, just, samma,
+         plus excepting med/för/vid/kan/var/grund on the noun side for
+         the same rare-noun-reading collision already documented on
+         DETTA.UTRUM_t-ord.NN) only cut this to 503 and 701, not a
+         shrinking tail converging on zero.
+
+         Root cause, from tagging actual failures directly (the CLI's
+         taggeronly mode): this is NOT primarily a homograph-list
+         problem the way the determiner-anchored rules were. Unlike
+         those (which need a specific 3-token en/ett/den/det+JJ+NN
+         window, a comparatively rare and structurally constrained
+         context), a bare adjective sitting immediately next to a noun
+         happens constantly in ordinary prose without the two being in
+         a real attributive relationship at all: predicative adjectives
+         followed by an unrelated noun starting the next clause/phrase
+         ("kan komma fel även om han slår rätt nummer" - "rätt" modifies
+         "nummer" but doesn't inflect), and Swedish's invariant-adjective
+         class turns out to be large and open-ended, not a short closed
+         list: fixed words (bra, fel, rätt, yttre, inre, just, samma),
+         comparatives (-are/-re forms never inflect for gender), and a
+         real, productive class of loanword adjectives that don't take
+         the neuter "-t" at all (e.g. "en smart lösning"/"ett smart
+         val", also colors like rosa/lila/orange). No realistic
+         exception list closes an open word class. This overlaps
+         heavily with, and confirms, the earlier predicative-agreement
+         rejection just above/below in this file: both dead ends share
+         the same core problem, an adjective with no explicit determiner
+         anchor is not reliably in a checkable relationship with any
+         particular neighboring noun. Left here as a documented dead
+         end, same as the predicative-agreement note, so this specific
+         mechanism isn't re-attempted without a fundamentally different
+         approach (e.g. a real invariant-adjective dictionary flag
+         rather than tag-based inference, or requiring a determiner
+         anchor as every other rule in this file already does). See
+         implementation-plan.md for the full investigation. -->
     <rule id="DEN.JJ.NEUTRAL_n-ord.NN" name="Rätt bestämd artikel (den/det)">
       <pattern>
         <token>den</token>
