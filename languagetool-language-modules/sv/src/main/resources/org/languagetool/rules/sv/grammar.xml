@@ -866,6 +866,45 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <example>Var är min tennisracket?</example>
       <example>Fågeln satt hos hans gamle vän Roland.</example>
     </rule>
+    <rule id="PREP_DE.dem" name="Rätt form av pronomen efter preposition (de/dem)">
+      <!-- roadmap.md's structural de/dem case rule (kth-granska-error-
+           taxonomy.md §5, "object form after a preposition"): a
+           preposition governs object case, so "de" directly after one
+           is wrong, e.g. "Han skickade brev till de" -> "... till dem".
+           Complements the existing statistical de/dem confusion pair
+           rather than replacing it.
+
+           Two real risks checked before writing this pattern:
+           (1) several common prepositions (efter, om, sedan, innan)
+           also work as SUBORDINATING CONJUNCTIONS, where a following
+           "de" is a genuine clause subject in nominative case, correctly
+           "de" not "dem" (e.g. "Efter de hade ätit, gick de hem" —
+           confirmed via direct tagging that "efter"/"om" carry a PP
+           reading in exactly this construction). Restricted the
+           preposition list to ones that don't double as conjunctions.
+           (2) "de" is also the plural definite ARTICLE used before an
+           adjective or noun ("till de arbetslösa" = "to the
+           unemployed"), by far the most common shape of "preposition +
+           de" in real text and never an error. Requiring "de" to be
+           immediately followed by clause-ending punctuation (not an
+           adjective/noun) targets specifically the case where "de"
+           stands alone as the preposition's object, matching the KTH
+           example's own shape ("... till de.").
+
+           Verified against the full 17,760-sentence Talbanken+LinES
+           corpus via TreebankRuleRegressionCheck: 0 false positives,
+           same bar as every other rule in this file. -->
+      <pattern>
+        <token regexp="yes">till|med|av|för|på|hos|mot|genom|mellan|bakom|framför|kring|runt|åt</token>
+        <token>de</token>
+        <token regexp="yes">[.,;:!?]</token>
+      </pattern>
+      <message>Efter en preposition krävs objektsform: "dem" istället för "de". Menade du: <suggestion>\1 dem\3</suggestion>?</message>
+      <example correction="till dem.">Han skickade brevet <marker>till de.</marker></example>
+      <example>Han skickade brevet till de arbetslösa.</example>
+      <example>Efter de hade ätit gick de hem.</example>
+      <example>Om de kommer imorgon blir det roligt.</example>
+    </rule>
     <rule id="ART_VB.n-ord" name="Rätt kongruensböjning av artikel">
       <pattern>
         <token>ett</token>
