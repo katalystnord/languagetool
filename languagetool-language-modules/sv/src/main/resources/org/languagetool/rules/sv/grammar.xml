@@ -50,6 +50,31 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <message>Enligt tt-språket och Svenska språknämnden bör ordet <suggestion>alltmer</suggestion> ej särskrivas.</message>
       <example correction="alltmer">Det blir <marker>allt mer</marker> vanligt att folk särskriver.</example>
     </rule>
+    <rule id="I_FRAN" name="Felaktig särskrivning av 'ifrån' efter ursprungsverb">
+      <!-- "ifrån" is always one word per SAOL/Språkrådet ("i från" is
+           listed as simply wrong in written standard Swedish, dialect
+           pronunciation notwithstanding); "från" and "ifrån" themselves
+           are free variants with no rule distinguishing them. Anchored
+           to a small set of verbs that commonly take "ifrån"/"från" as
+           an origin complement (komma, vara, härstamma) rather than a
+           bare token-adjacency match on "i från", since "i" and "från"
+           also legitimately end up adjacent as two unrelated words
+           belonging to different phrases ("en aktivitet man kan delta i
+           från det år...", "CD-i från Philips" - a product name).
+           Checked all 85 real occurrences of these verbs immediately
+           followed by "i från" in a 2.84GB web+Wikipedia corpus: no
+           false positives, including the semantically ambiguous "var"
+           (can be "was" or the question word "where", both want ifrån
+           fused either way). -->
+      <pattern case_sensitive="no">
+        <token regexp="yes">kommer|kom|kommit|är|var|varit|härstammar|härstammade|härstammat</token>
+        <token>i</token>
+        <token>från</token>
+      </pattern>
+      <message>Felaktig särskrivning. Enligt Språkrådet och SAOL skrivs "ifrån" alltid ihop. Menade du <suggestion>\1 ifrån</suggestion>?</message>
+      <example correction="kommer ifrån">Han <marker>kommer i från</marker> Stockholm.</example>
+      <example>en aktivitet man kan delta i från det år man fyller 27 år</example>
+    </rule>
   </category>
   <!-- ====================================================================== -->
   <!-- Punkter efter förkortningar -->
