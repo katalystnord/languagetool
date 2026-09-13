@@ -794,6 +794,63 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <message>Substantivet "\2" är utrum (en-ord) och styr då "er" istället för "ert". Menade du: <suggestion>er \2</suggestion>?</message>
       <example correction="er bil">Ni sålde <marker>ert bil</marker>.</example>
     </rule>
+    <rule id="POSSESSIV.NN_BF" name="Possessivpronomen kräver obestämd form av substantivet">
+      <!-- roadmap.md's re-attempt of the possessive+noun-form rule
+           (agreement-rule-design.md §4 item 4), first tried
+           2026-09-09/10 as part of `sv-grammar-mining-2` and reverted:
+           possessives (min/din/sin/vår/er and the invariant hans/
+           hennes/dess/deras, none of which have a gender-variant pair
+           of their own the way the 5 sibling rule-pairs above do)
+           require the noun's INDEFINITE form ("min bil", never "min
+           bilen"), a real, uncontroversial Swedish rule none of the
+           gender-agreement rules above check (they only check
+           article/pronoun-vs-noun GENDER, not definiteness). The
+           first attempt found 48 false positives against the full
+           corpus, root-caused to ordinary common nouns (son, vän,
+           hustru, agent, kompis, rum, konto, ...) carrying a spurious
+           secondary NN:BF reading from an unrelated homograph (e.g.
+           "son" also parses as the definite form of "so", a female
+           pig) and was reverted outright rather than grow an
+           ever-longer rule-level exception list for what looked like
+           a pervasive, not just closed, collision pattern.
+
+           Re-attempted here with the DETTA_FOLLOWER_NOT_NOUN pattern
+           (disambiguation.xml) applied up front instead: rather than
+           assume "pervasive in the dictionary overall" also means
+           "pervasive in this specific context" (immediately after a
+           possessive pronoun), just built the rule and checked
+           empirically, the same discipline used everywhere else in
+           this file. Scoped to NN:BF:SIN:NOM specifically (definite
+           singular nominative, the common shape of this error); wider
+           number/case coverage is future work, not attempted here.
+
+           Two last narrow, one-off homographs closed directly on this
+           rule rather than via disambiguation, since neither is a
+           class the way son/adjectives/-an-nouns are: "alfabetet" in
+           "...gett er alfabetet" (gave you the alphabet) — here "er"
+           is the 2nd-person-plural OBJECT pronoun ("you"), not the
+           possessive "your" at all, the same ambiguity already
+           documented and accepted on ER.NEUTRAL_n-ord.NN elsewhere in
+           this file; and "tennisracket", which collides with the
+           definite form of a different, rarer compound spelling
+           ("tennisrack", neuter) for the same object.
+
+           Verified against the full 17,760-sentence Talbanken+LinES
+           corpus via TreebankRuleRegressionCheck: 0 false positives,
+           same bar as every other rule in this file. -->
+      <pattern>
+        <token regexp="yes">min|din|sin|vår|er|hans|hennes|dess|deras</token>
+        <token postag="NN:BF:SIN:NOM:.*" postag_regexp="yes">
+          <exception regexp="yes">alfabetet|tennisracket</exception>
+        </token>
+      </pattern>
+      <message>Possessivpronomen styr obestämd form av substantivet. Menade du: <suggestion>\1 <match no="2" postag="NN:OF:SIN:NOM:.*" postag_regexp="yes"/></suggestion>?</message>
+      <example correction="min bil">Jag sålde <marker>min bilen</marker>.</example>
+      <example>Jag sålde min bil.</example>
+      <example>Jag har gett er alfabetet.</example>
+      <example>Var är min tennisracket?</example>
+      <example>Fågeln satt hos hans gamle vän Roland.</example>
+    </rule>
     <rule id="ART_VB.n-ord" name="Rätt kongruensböjning av artikel">
       <pattern>
         <token>ett</token>

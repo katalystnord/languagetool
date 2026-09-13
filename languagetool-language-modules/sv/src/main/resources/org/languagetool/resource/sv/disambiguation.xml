@@ -352,4 +352,101 @@ Swedish Disambiguation Rules for LanguageTool
         </pattern>
         <disambig action="remove" postag="NN:OF:SIN:NOM:UTR"/>
     </rule>
+    <rule name="Possessivpronomen + 'son' (inte substantivet 'so' i bestämd form)" id="POSSESSIV_FOLLOWER_SON_NOT_SO">
+        <!-- Added 2026-09-14 to let POSSESSIV.NN_BF (grammar.xml) ship at
+             all: that rule checks that a possessive pronoun (min/din/sin/
+             vår/er/hans/hennes/dess/deras) is followed by the noun's
+             INDEFINITE form ("min bil", never "min bilen"). First
+             attempted 2026-09-09/10 and reverted outright before this
+             fix existed: the wordform "son" ("a son", genuinely
+             indefinite) happens to collide exactly with "so" (a female
+             pig)'s DEFINITE form, so every ordinary "min/sin/hans son"
+             carried a spurious NN:BF reading and looked like a
+             definiteness error. Same class of problem as
+             DETTA_FOLLOWER_NOT_NOUN above, same fix: remove the
+             ambiguous reading in exactly this context rather than grow
+             the grammar rule's own exception list. -->
+        <pattern>
+            <token regexp="yes">min|din|sin|vår|er|hans|hennes|dess|deras</token>
+            <marker>
+                <token>son</token>
+            </marker>
+        </pattern>
+        <disambig action="remove" postag="NN:BF:SIN:NOM:UTR"/>
+    </rule>
+    <rule name="Possessivpronomen + adjektiv i bestämd form (inte ett substantiverat adjektiv)" id="POSSESSIV_FOLLOWER_ADJ_NOT_NOUN">
+        <!-- Second, more general class found the same day as the rule
+             above: definite-form adjectives (JJ:BF, e.g. "gamla",
+             "unga", "stora") are also, productively, usable as
+             standalone nominalized nouns in Swedish ("de gamla" = "the
+             old ones"), and the dictionary tags this by giving many
+             such words a genuine secondary NN:BF reading alongside
+             their ordinary JJ:BF one. Immediately after a possessive,
+             this reading is essentially always spurious: "min gamla
+             bil" has "gamla" modifying "bil" two words later, not
+             standing alone as "my old one" (that reading exists but is
+             comparatively rare and, per this project's precision-over-
+             recall bias, an acceptable miss). Fixed generically by
+             condition (any token with a JJ:BF reading following one of
+             these possessives), not by word list, since this
+             nominalization pattern is productive across many
+             adjectives, not a short closed set the way "son" is.
+             Matches JJ:BF or JJ:M: "gamle" (an archaic/dialectal
+             masculine-specific form of "gammal", e.g. "hans gamle
+             vän") is tagged JJ:M rather than JJ:BF but carries the
+             exact same spurious NN:BF:SIN:NOM:UTR reading, found as a
+             real corpus hit. -->
+        <pattern>
+            <token regexp="yes">min|din|sin|vår|er|hans|hennes|dess|deras</token>
+            <marker>
+                <token postag="JJ:BF|JJ:M" postag_regexp="yes"/>
+            </marker>
+        </pattern>
+        <disambig action="remove" postag="NN:BF:SIN:NOM:UTR"/>
+    </rule>
+    <rule name="Possessivpronomen + adjektiv i bestämd form, neutrum (inte ett substantiverat adjektiv)" id="POSSESSIV_FOLLOWER_ADJ_NOT_NOUN_NEU">
+        <!-- Same as POSSESSIV_FOLLOWER_ADJ_NOT_NOUN above; a single
+             <disambig> can only remove one exact postag (no regexp
+             support on that element, unlike <token>), so gender needs
+             a second rule rather than one combined pattern. -->
+        <pattern>
+            <token regexp="yes">min|din|sin|vår|er|hans|hennes|dess|deras</token>
+            <marker>
+                <token postag="JJ:BF|JJ:M" postag_regexp="yes"/>
+            </marker>
+        </pattern>
+        <disambig action="remove" postag="NN:BF:SIN:NOM:NEU"/>
+    </rule>
+    <rule name="Possessivpronomen + '-an'-substantiv där obestämd och bestämd form stavas likadant" id="POSSESSIV_FOLLOWER_AN_NOUN_SAME_SPELLING">
+        <!-- Third class found the same day: a specific, lexically closed
+             (not productive) set of Swedish deverbal abstract nouns
+             ending in unstressed "-an" (antydan, längtan, fruktan,
+             fordran, ...) where the indefinite and definite singular
+             forms are spelled IDENTICALLY (unlike regular nouns, which
+             visibly add -en/-et for the definite form). The dictionary
+             correctly carries both readings for the identical spelling,
+             but since the two forms can never be told apart by spelling
+             for this word class, "min/hans/sin X" is never actually
+             wrong when X is one of these words: there is no possible
+             incorrect written form to catch, since correct and
+             "incorrect" look the same. Removing the BF reading here
+             loses no real detection, unlike the borderline recall
+             tradeoff on the adjective-nominalization rule above.
+             Enumerated from real corpus hits rather than a broader
+             "-an$" regex: ordinary nouns whose regular definite form
+             also happens to end in "an" exist too (flicka -> flickan,
+             gata -> gatan, klocka -> klockan, the normal -a-stem
+             definite suffix), and for THOSE words indefinite and
+             definite genuinely differ in spelling ("flicka" vs
+             "flickan"), so a blanket suffix match would incorrectly
+             silence genuine errors for that separate, much larger word
+             class. -->
+        <pattern>
+            <token regexp="yes">min|din|sin|vår|er|hans|hennes|dess|deras</token>
+            <marker>
+                <token regexp="yes">antydan|förtvivlan|befordran|påverkan|förfäran|längtan|begäran|dyrkan|verkan|ängslan|fruktan|början|fordran</token>
+            </marker>
+        </pattern>
+        <disambig action="remove" postag="NN:BF:SIN:NOM:UTR"/>
+    </rule>
 </rules>
