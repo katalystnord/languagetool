@@ -905,6 +905,31 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <example>Efter de hade ätit gick de hem.</example>
       <example>Om de kommer imorgon blir det roligt.</example>
     </rule>
+    <rule id="UNDERFUND.med" name="Rätt preposition i fast uttryck (komma underfund med)">
+      <!-- roadmap.md's "wrong preposition in fixed expressions" item
+           (kth-granska-error-taxonomy.md §4), sourced from Svensk
+           handordbok (Johannisson & Ljunggren, 1966/1980), which
+           explicitly marks this exact correction: "komma underfund
+           med (ej: om) ngt". Checked against the modern merged
+           Wikipedia+c4 corpus before shipping rather than trusting a
+           60-year-old prescription blindly: "komma underfund med" at
+           161 occurrences vs. "komma underfund om" at 4, a real,
+           still-current error, unlike this same dictionary's "en bild
+           av"/"en bild på" entry (also marked ej: på in 1966, but "på"
+           is now the more common form in the corpus, 4473 vs 3659 —
+           usage has shifted since, not shipped) or "utgångspunkt i"/
+           "från" (from the same entry KTH's own example cites, but
+           "från" occurs in 30% of real corpus hits in exactly this
+           construction, sampled and confirmed genuine, not shipped
+           either — too common to safely flag as an error today). -->
+      <pattern>
+        <token>underfund</token>
+        <token>om</token>
+      </pattern>
+      <message>Det heter "komma underfund med", inte "komma underfund om". Menade du: <suggestion>underfund med</suggestion>?</message>
+      <example correction="underfund med">Jag kom <marker>underfund om</marker> att det inte skulle fungera.</example>
+      <example>Jag kom underfund med att det inte skulle fungera.</example>
+    </rule>
     <rule id="ART_VB.n-ord" name="Rätt kongruensböjning av artikel">
       <pattern>
         <token>ett</token>
