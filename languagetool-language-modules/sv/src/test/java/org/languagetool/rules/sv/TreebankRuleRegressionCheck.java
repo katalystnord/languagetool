@@ -84,7 +84,9 @@ public final class TreebankRuleRegressionCheck {
       "POSSESSIV.NN_BF",
       "PREP_DE.dem",
       "UNDERFUND.med",
-      "KOMMER_UTAN_ATT"
+      "KOMMER_UTAN_ATT",
+      "SAMORDNAD_JJ.NEUTRAL_n-ord.NN",
+      "SAMORDNAD_JJ.UTRUM_t-ord.NN"
     ));
 
     Path treebankDir = Paths.get(System.getProperty("treebank.dir",

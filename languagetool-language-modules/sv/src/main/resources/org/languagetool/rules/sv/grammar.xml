@@ -403,6 +403,96 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <example>Han var en amerikansk före detta reklamdirektör.</example>
       <example>Jag drev omkring med en stadig dosis av orienten.</example>
     </rule>
+    <rule id="SAMORDNAD_JJ.NEUTRAL_n-ord.NN" name="Rätt böjning av samordnade adjektiv (neutrum)">
+      <!-- roadmap.md's "gult och röd hus"-class (KTH taxonomy §6e,
+           coordinated adjectives): two adjectives joined by "och" both
+           attributively modify the same noun and so both need to agree
+           with it, but only the first is checked by every other rule in
+           this file (ETT_JJ.UTRUM_t-ord.NN and friends only ever look at
+           the token immediately after the determiner). "ett gult och
+           röd hus" has the first adjective correctly inflected for the
+           neuter noun "hus" but the second left in its utrum form.
+
+           Deliberately NOT built the same way as the rejected bare
+           JJ.NEUTRAL_n-ord.NN/JJ.UTRUM_t-ord.NN attempt above (a bare
+           adjective next to a noun with no determiner anchor): here the
+           determiner and first adjective both anchor the construction
+           explicitly, so this isn't the same open-ended "adjective with
+           no checkable relationship" problem.
+
+           The real risk carried over from that rejection is still live
+           on the SECOND adjective, though: Swedish's invariant-adjective
+           class (colors, comparatives, loanwords, SAG §57's oböjliga
+           adjektiv) doesn't take neuter -t, so "ett stort och smart hus"
+           is completely correct even though "smart" looks bare. Solved
+           the same way JJ.OBESTAMD_bestamd.NN below solves the mirror
+           problem for definite form: the dictionary already tags every
+           invariant adjective with BOTH its JJ:PN and JJ:PU readings on
+           the same token (e.g. "smart[smart/JJ:PN,smart/JJ:PU]"),
+           because it genuinely is valid in both slots. Requiring the
+           second adjective to carry ONLY a JJ:PU reading, with no JJ:PN
+           reading at all, isolates exactly the case where the word is
+           genuinely gender-marked and in the wrong gender ("röd", which
+           the dictionary tags only as JJ:PU) from the invariant class,
+           without needing a hand-built exception list at all.
+
+           Real attributive occurrences of this exact construction are
+           rare in ordinary text (a corpus check for "gult och röd" found
+           only the idiomatic adverbial "i gult och rött" [color-scheme
+           idiom, no following noun, not matched by this pattern] and no
+           genuine attributive hits either way), so this rule is mostly
+           precautionary/structural rather than mined from an observed
+           failure, the same situation as SAG-sourced hardening
+           elsewhere in this file.
+
+           Verified against the full 17,760-sentence Talbanken+LinES
+           corpus via TreebankRuleRegressionCheck: 0 false positives,
+           same bar as every other rule in this file. -->
+      <pattern>
+        <token>ett</token>
+        <token postag="JJ:PN"/>
+        <token>och</token>
+        <token postag="JJ:PU">
+          <exception postag="JJ:PN"/>
+          <exception postag="JJ:BF"/>
+          <exception postag="VB:.*" postag_regexp="yes"/>
+        </token>
+        <token postag="NN:OF:SIN:.*:NEU" postag_regexp="yes">
+          <exception regexp="yes">grund|var|vara|kaffe|te|martini|djup|s|gräns|lag|slags|titan|ö|öl|före|dosis|åldrande|duns|väl|agn|as|bak|bål|beta|bete|borr|byk|damm|fax|galler|glycin|grand|hov|imperativ|intervall|kast|klick|knarr|kvarter|labb|lager|lägg|lår|led|lock|lov|moj|napp|nöt|pick|pip|plan|plugg|pris|ras|rev|reversal|schack|skrot|slask|snack|snitt|snurr|spann|spänn|stubb|sudd|sug|telefax|test|ton|trav|vad|val|varp</exception>
+          <exception postag="JJ:.*|VB:.*" postag_regexp="yes"/>
+        </token>
+      </pattern>
+      <message>Det andra adjektivet "\4" böjs inte i neutrum (ett-ord) trots att det tillsammans med "\2" beskriver "\5". Menade du: <suggestion>ett \2 och <match no="4" postag="JJ:PN"/> \5</suggestion>?</message>
+      <example correction="ett stort och rött hus">Vi köpte <marker>ett stort och röd hus</marker>.</example>
+      <example>Vi köpte ett stort och rött hus.</example>
+      <example>Han bodde i ett gammalt och charmigt hus.</example>
+      <example>Det var ett stort och smart hus.</example>
+      <example>Det var ett svart och vitt hus.</example>
+    </rule>
+    <rule id="SAMORDNAD_JJ.UTRUM_t-ord.NN" name="Rätt böjning av samordnade adjektiv (utrum)">
+      <!-- Mirror of SAMORDNAD_JJ.NEUTRAL_n-ord.NN above; see that rule's
+           comment. Reuses ETT_JJ.UTRUM_t-ord.NN's noun-side exception
+           list. -->
+      <pattern>
+        <token>en</token>
+        <token postag="JJ:PU"/>
+        <token>och</token>
+        <token postag="JJ:PN">
+          <exception postag="JJ:PU"/>
+          <exception postag="JJ:BF"/>
+          <exception postag="VB:.*" postag_regexp="yes"/>
+        </token>
+        <token postag="NN:OF:SIN:.*:UTR" postag_regexp="yes">
+          <exception regexp="yes">för|med|öga|öra|urinprov|kvarter|val|faktum|halvsekel|pris|fotografi|agn|as|bak|bål|beta|bete|borr|byk|damm|fax|galler|glycin|grand|grund|hov|imperativ|intervall|kast|klick|knarr|labb|lag|lager|lägg|lår|led|lock|lov|moj|napp|nöt|pick|pip|plan|plugg|ras|rev|reversal|schack|skrot|slask|snack|snitt|snurr|spann|spänn|stubb|sudd|sug|telefax|test|ton|trav|vad|var|vara|varp</exception>
+          <exception postag="JJ:.*|VB:.*" postag_regexp="yes"/>
+        </token>
+      </pattern>
+      <message>Det andra adjektivet "\4" böjs inte i utrum (en-ord) trots att det tillsammans med "\2" beskriver "\5". Menade du: <suggestion>en \2 och <match no="4" postag="JJ:PU"/> \5</suggestion>?</message>
+      <example correction="en gul och röd bil">Hon köpte <marker>en gul och rött bil</marker>.</example>
+      <example>Hon köpte en gul och röd bil.</example>
+      <example>Han hade en lång och smart plan.</example>
+      <example>Det var en svart och vit bild.</example>
+    </rule>
     <rule id="JJ.OBESTAMD_bestamd.NN" name="Rätt böjning av adjektivet (bestämd form)">
       <!-- roadmap.md Phase C2 item 2 ("den gult villan"-class,
            agreement-rule-design.md §4 item 2): determiner and noun
