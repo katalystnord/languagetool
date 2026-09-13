@@ -367,7 +367,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
         <token>ett</token>
         <token postag="JJ:PN">
           <exception postag="JJ:BF"/>
-          <exception regexp="yes">blå|grå|rosa|lila|beige|orange|medelålders|vid</exception>
+          <exception regexp="yes">blå|grå|rosa|lila|beige|orange|medelålders|vid|noga|ringa|sakta|stilla|äkta|prima|purpurne|reda|redo|sekunda|silverne|solo|udda|urbota|varse|vice|ynka|öde|övermaga|djävla|groggy|himla|jädra|jäkla|mysko|nedra|pytte|reko|sabla|avsides|dekrepitus|emeritus|gammaldags|halvvägs|inhyses|insides|invärtes|motvalls|oherrans|rudis|rättskaffens|smaskens|stackars|särdeles|topless|urminnes|utrikes|utsocknes|utvärtes|bakis|bergis|byxis|hejans|hyvens|jädrans|lajbans|poppis|skakis|tjänis|väldans|allen|allround|bråttom|camp|cerise|ens|fjärran|framåt|förbi|gay|jalu|kvitt|lagom|loss|omsams|piggelin|pirum|remi|renons|sams|osams|selfmade|slut|släkt|solokvist|synd|tabu|tipptopp|turkos|biff|buss|ding|finemang|haj|hipp|kaputt|knas|kul|lajban|less|näck|okej|flott|knockout|live|läck|läns|saker|urarva|berått|fatt|lurt|lytt|lönt|otalt|strömt|ömse|diverse|respektive</exception>
         </token>
         <token postag="NN:OF:SIN:.*:UTR" postag_regexp="yes">
           <exception regexp="yes">för|med|öga|öra|urinprov|kvarter|val|faktum|halvsekel|pris|fotografi|agn|as|bak|bål|beta|bete|borr|byk|damm|fax|galler|glycin|grand|grund|hov|imperativ|intervall|kast|klick|knarr|labb|lag|lager|lägg|lår|led|lock|lov|moj|napp|nöt|pick|pip|plan|plugg|ras|rev|reversal|schack|skrot|slask|snack|snitt|snurr|spann|spänn|stubb|sudd|sug|telefax|test|ton|trav|vad|var|vara|varp</exception>
@@ -388,7 +388,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
         <token>en</token>
         <token postag="JJ:PU">
           <exception postag="JJ:BF"/>
-          <exception regexp="yes">blå|grå|rosa|lila|beige|orange|medelålders|vid</exception>
+          <exception regexp="yes">blå|grå|rosa|lila|beige|orange|medelålders|vid|noga|ringa|sakta|stilla|äkta|prima|purpurne|reda|redo|sekunda|silverne|solo|udda|urbota|varse|vice|ynka|öde|övermaga|djävla|groggy|himla|jädra|jäkla|mysko|nedra|pytte|reko|sabla|avsides|dekrepitus|emeritus|gammaldags|halvvägs|inhyses|insides|invärtes|motvalls|oherrans|rudis|rättskaffens|smaskens|stackars|särdeles|topless|urminnes|utrikes|utsocknes|utvärtes|bakis|bergis|byxis|hejans|hyvens|jädrans|lajbans|poppis|skakis|tjänis|väldans|allen|allround|bråttom|camp|cerise|ens|fjärran|framåt|förbi|gay|jalu|kvitt|lagom|loss|omsams|piggelin|pirum|remi|renons|sams|osams|selfmade|slut|släkt|solokvist|synd|tabu|tipptopp|turkos|biff|buss|ding|finemang|haj|hipp|kaputt|knas|kul|lajban|less|näck|okej|flott|knockout|live|läck|läns|saker|urarva|berått|fatt|lurt|lytt|lönt|otalt|strömt|ömse|diverse|respektive</exception>
         </token>
         <token postag="NN:OF:SIN:.*:NEU" postag_regexp="yes">
           <exception regexp="yes">grund|var|vara|kaffe|te|martini|djup|s|gräns|lag|slags|titan|ö|öl|före|dosis|åldrande|duns|väl|agn|as|bak|bål|beta|bete|borr|byk|damm|fax|galler|glycin|grand|hov|imperativ|intervall|kast|klick|knarr|kvarter|labb|lager|lägg|lår|led|lock|lov|moj|napp|nöt|pick|pip|plan|plugg|pris|ras|rev|reversal|schack|skrot|slask|snack|snitt|snurr|spann|spänn|stubb|sudd|sug|telefax|test|ton|trav|vad|val|varp</exception>
@@ -452,6 +452,21 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
            generalization already used for the -ande participle class
            on EN.NEUTRAL_n-ord.NN/ETT.UTRUM_t-ord.NN above.
 
+           Hardened 2026-09-14 with Svenska Akademiens Grammatik (SAG)
+           § 57's own list of oböjliga adjektiv (invariant adjectives),
+           found after David pointed at SAG as a reference this same
+           overnight session: the color/medelålders/vid class above
+           was discovered piecemeal via corpus false positives, but
+           SAG documents the full closed class directly and
+           authoritatively (noga, ringa, sakta, stilla, äkta and dozens
+           more, this rule's exception list now includes the general-
+           language ("allmänspråket") entries from all of SAG § 57's
+           sub-lists, not just the handful the 17,760-sentence corpus
+           happened to surface). This is precautionary hardening
+           against text the corpus doesn't happen to contain, not a
+           response to a new observed failure; the corpus check below
+           was already at 0 before this addition and stays there after.
+
            Verified against the full 17,760-sentence Talbanken+LinES
            corpus via TreebankRuleRegressionCheck: 0 false positives,
            same bar as every other rule in this file. -->
@@ -460,7 +475,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
         <token postag="JJ:PU|JJ:PN" postag_regexp="yes">
           <exception postag="JJ:BF"/>
           <exception postag="VB:.*" postag_regexp="yes"/>
-          <exception regexp="yes">blå|grå|rosa|lila|beige|orange|medelålders|vid</exception>
+          <exception regexp="yes">blå|grå|rosa|lila|beige|orange|medelålders|vid|noga|ringa|sakta|stilla|äkta|prima|purpurne|reda|redo|sekunda|silverne|solo|udda|urbota|varse|vice|ynka|öde|övermaga|djävla|groggy|himla|jädra|jäkla|mysko|nedra|pytte|reko|sabla|avsides|dekrepitus|emeritus|gammaldags|halvvägs|inhyses|insides|invärtes|motvalls|oherrans|rudis|rättskaffens|smaskens|stackars|särdeles|topless|urminnes|utrikes|utsocknes|utvärtes|bakis|bergis|byxis|hejans|hyvens|jädrans|lajbans|poppis|skakis|tjänis|väldans|allen|allround|bråttom|camp|cerise|ens|fjärran|framåt|förbi|gay|jalu|kvitt|lagom|loss|omsams|piggelin|pirum|remi|renons|sams|osams|selfmade|slut|släkt|solokvist|synd|tabu|tipptopp|turkos|biff|buss|ding|finemang|haj|hipp|kaputt|knas|kul|lajban|less|näck|okej|flott|knockout|live|läck|läns|saker|urarva|berått|fatt|lurt|lytt|lönt|otalt|strömt|ömse|diverse|respektive</exception>
         </token>
         <token postag="NN:BF:.*" postag_regexp="yes"/>
       </pattern>
