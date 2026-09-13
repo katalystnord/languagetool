@@ -135,6 +135,137 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <message>Adjektivet "\2" är böjt i positiv neutrum och bör då föregås av ordet "ett" istället för "en", alternativt böjas i positiv utrum. <suggestion>ett \2 \3</suggestion></message>
       <example correction="ett mörkt rum">Det var <marker>en mörkt rum</marker>. </example>
     </rule>
+    <rule id="EN.NEUTRAL_n-ord.NN" name="Rätt obestämd artikel (en/ett)">
+      <!-- Complementary to JJ.OCH_n-ord.NN/JJ.OCH_t-ord.NN above (which
+           need an adjective between the article and noun): the plain
+           "en/ett + noun, no adjective" case, arguably the single most
+           common shape of this error in real writing ("en hus" / "ett
+           bil").
+
+           Verified against the full 17,760-sentence Talbanken+LinES
+           corpus (TreebankRuleRegressionCheck). First pass, with only
+           "grund"/"var"/"vara" excepted (the identical, already-proven
+           ambiguity on DENNA.NEUTRAL_n-ord.NN and the SIN/MIN/DIN/VAR
+           possessive rules below): 121 false positives, two distinct
+           causes, neither the open-ended invariant-adjective problem
+           that killed the bare-adjective rule above. (1) Present
+           participles (-ande forms, e.g. "forskande" in "en forskande
+           blick") are a genuinely productive class that can always
+           nominalize in Swedish, so every one of them carries a
+           spurious NN:NEU reading alongside its real JJ/VB:PREPC one;
+           excluding any token that also has a JJ or VB reading closes
+           this whole class at once rather than listing participles one
+           by one. (2) A handful of genuinely dual-gender nouns in the
+           dictionary (öga, kaffe, te, martini: colloquially "en" is
+           completely normal for all of these even where a formal NEU
+           reading also exists) and one true JJ/NN homograph (djup, "a
+           deep place" as a noun vs. the adjective "deep") needed a
+           direct word-list exception, the same kind already used
+           throughout this file.
+
+           A third, unexpected class turned up in a further check:
+           querying the dictionary source directly (not just corpus
+           hits) for every wordform carrying BOTH an
+           NN:OF:SIN:NOM:NEU and an NN:OF:SIN:NOM:UTR reading found 61
+           of them total across the whole dictionary (agn, as, bak,
+           bål, beta, bete, borr, byk, damm, fax, galler, glycin, grand,
+           hov, imperativ, intervall, kast, klick, knarr, kvarter, labb,
+           lag, lager, lägg, lår, led, lock, lov, moj, napp, nöt, pick,
+           pip, plan, plugg, pris, ras, rev, reversal, schack, skrot,
+           slask, snack, snitt, snurr, spann, spänn, stubb, sudd, sug,
+           telefax, test, ton, trav, vad, val, varp, plus grund/var/vara
+           already excepted above) — a genuinely small, closed set (61
+           out of a 279k-line dictionary), not a systemic tagging
+           problem, so safe to except wholesale rather than treat as an
+           open-ended risk the way the bare-adjective rule's invariant
+           adjectives were. Corpus mining separately surfaced a handful
+           more not in that exact tag shape (gräns, lag, slags, titan,
+           ö, and the "s"/"k" tokens from the "s k"/"s.k." abbreviation
+           for "så kallad") which the dictionary-source query above
+           didn't catch, most likely compiled into the dictionary via a
+           later merge step than the raw source dump was queried
+           against; added from direct corpus evidence instead. Also
+           found: "åldrande" (present participle of "åldras", "aging"),
+           unlike every other -ande participle here, has no VB:PREPC
+           reading at all in this dictionary, only the nominalized
+           NN:NEU one, so the generic JJ/VB exclusion above doesn't
+           catch it; and "väl" carries the same rare NN:NEU "weal/
+           welfare" reading already documented and excepted on
+           ER.NEUTRAL_n-ord.NN elsewhere in this file. Final result: 0
+           false positives against the full 17,760-sentence corpus,
+           same bar as every other rule in this file. -->
+      <pattern>
+        <token>en</token>
+        <token postag="NN:OF:SIN:.*:NEU" postag_regexp="yes">
+          <exception regexp="yes">grund|var|vara|kaffe|te|martini|djup|s|gräns|lag|slags|titan|ö|åldrande|duns|väl|agn|as|bak|bål|beta|bete|borr|byk|damm|fax|galler|glycin|grand|hov|imperativ|intervall|kast|klick|knarr|kvarter|labb|lager|lägg|lår|led|lock|lov|moj|napp|nöt|pick|pip|plan|plugg|pris|ras|rev|reversal|schack|skrot|slask|snack|snitt|snurr|spann|spänn|stubb|sudd|sug|telefax|test|ton|trav|vad|val|varp</exception>
+          <exception postag="JJ:.*|VB:.*" postag_regexp="yes"/>
+        </token>
+      </pattern>
+      <message>Substantivet "\2" är neutrum (ett-ord) och bör då föregås av "ett" istället för "en". Menade du: <suggestion>ett \2</suggestion>?</message>
+      <example correction="ett hus">Jag såg <marker>en hus</marker>.</example>
+      <example>All framgång har en grund att stå på.</example>
+      <example>Han gav mig en forskande blick.</example>
+      <example>Han tog en djup klunk te och suckade.</example>
+      <example>Kan jag få en kaffe och en kaka, tack?</example>
+      <example>Man placerar därför uranet i en s k moderator.</example>
+      <example>Det är mycket svårt att dra en gräns mellan de två.</example>
+      <example>Efter den 1 juli 1972 gäller nämligen en lag om avrundning.</example>
+      <example>Han bodde ensam i en lerhydda med en slags veranda.</example>
+      <example>Legenden berättar att Zeus åtrådde en titan vid namn Metis.</example>
+      <example>Vi bodde på den lilla ö där de båda var födda.</example>
+      <example>Han bodde kvar på ön, en åldrande man med gott minne.</example>
+      <example>Dudley ramlade av stolen med en duns som skakade hela köket.</example>
+      <example>Gå till en väl utrustad servicestation.</example>
+    </rule>
+    <rule id="ETT.UTRUM_t-ord.NN" name="Rätt obestämd artikel (en/ett)">
+      <!-- Mirror of EN.NEUTRAL_n-ord.NN above, same verification method
+           and same two failure classes found on this side too. "för"
+           and "med" carry a genuine but rare NN:UTR reading (för = a
+           ship's bow, med = an archaic word for a comrade), the same
+           rare-noun-reading collision already documented and excepted
+           elsewhere in this file (för on SITT/MITT/DITT/VART/
+           ERT.UTRUM_t-ord.NN). Also checked "vid" (adjacent risk, same
+           preposition family) but the dictionary carries no NN reading
+           for it at all (AB/JJ:PU/PP only), so it's left out rather
+           than excepted on a guess. "öga", "urinprov", "kvarter",
+           "val", "faktum", "halvsekel" and "pris" are genuinely
+           dual-gender/ambiguously-tagged in the dictionary (NN:NEU and
+           NN:UTR both present, same class documented at length on
+           EN.NEUTRAL_n-ord.NN above, including its 61-word closed-set
+           dictionary-source list, applied here too since the ambiguity
+           is symmetric), and "smalt" collides with a rare noun sense
+           (a cobalt-blue pigment) of the adjective "smal"'s neuter
+           form; the generic JJ/VB exclusion (see the sibling rule
+           above) catches "smalt" and any similarly-shaped adjective/
+           participle homograph automatically. "fotografi" is a
+           genuine dictionary gap rather than a real ambiguity: this
+           dictionary only carries a UTR reading for it, missing the
+           correct NEU reading entirely ("ett fotografi" is the
+           standard correct form), so it needs excepting here even
+           though there's no real "en/ett" choice to make for this
+           word at all. Final result: 0 false positives against the
+           full 17,760-sentence corpus, same bar as every other rule
+           in this file. -->
+      <pattern>
+        <token>ett</token>
+        <token postag="NN:OF:SIN:.*:UTR" postag_regexp="yes">
+          <exception regexp="yes">för|med|öga|urinprov|kvarter|val|faktum|halvsekel|pris|fotografi|agn|as|bak|bål|beta|bete|borr|byk|damm|fax|galler|glycin|grand|grund|hov|imperativ|intervall|kast|klick|knarr|labb|lag|lager|lägg|lår|led|lock|lov|moj|napp|nöt|pick|pip|plan|plugg|ras|rev|reversal|schack|skrot|slask|snack|snitt|snurr|spann|spänn|stubb|sudd|sug|telefax|test|ton|trav|vad|var|vara|varp</exception>
+          <exception postag="JJ:.*|VB:.*" postag_regexp="yes"/>
+        </token>
+      </pattern>
+      <message>Substantivet "\2" är utrum (en-ord) och bör då föregås av "en" istället för "ett". Menade du: <suggestion>en \2</suggestion>?</message>
+      <example correction="en bil">Jag såg <marker>ett bil</marker>.</example>
+      <example>Ett för mycket är bättre än ett för lite.</example>
+      <example>Machie kastade ett öga på värmepannan.</example>
+      <example>Han hade ett smalt ärr i pannan.</example>
+      <example>Blir resultatet tveksamt kompletteras det med analys av ett urinprov.</example>
+      <example>Han gick ett kvarter söderut.</example>
+      <example>Om det är ett val mellan A och B.</example>
+      <example>Är det ett faktum?</example>
+      <example>Det är ännu inte ett halvsekel sedan dess.</example>
+      <example>Från ett pris på femtio kronor är man nu nere i en tia.</example>
+      <example>Kan en hund se vad ett fotografi föreställer?</example>
+    </rule>
     <!-- Tried and deliberately NOT added: bare adjective+noun gender
          mismatch with no determiner ("stor hus"-class, roadmap.md Phase
          C2 item 1, agreement-rule-design.md §4 item 1). Implemented as

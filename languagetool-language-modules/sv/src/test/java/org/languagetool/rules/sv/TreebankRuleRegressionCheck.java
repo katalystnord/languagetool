@@ -75,7 +75,9 @@ public final class TreebankRuleRegressionCheck {
       "DEN.JJ.NEUTRAL_n-ord.NN",
       "DET.JJ.UTRUM_t-ord.NN",
       "DENNA.NEUTRAL_n-ord.NN",
-      "DETTA.UTRUM_t-ord.NN"
+      "DETTA.UTRUM_t-ord.NN",
+      "EN.NEUTRAL_n-ord.NN",
+      "ETT.UTRUM_t-ord.NN"
     ));
 
     Path treebankDir = Paths.get(System.getProperty("treebank.dir",
