@@ -930,6 +930,42 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <example correction="underfund med">Jag kom <marker>underfund om</marker> att det inte skulle fungera.</example>
       <example>Jag kom underfund med att det inte skulle fungera.</example>
     </rule>
+    <rule id="KOMMER_UTAN_ATT" name="Infinitivmärket 'att' saknas efter 'kommer'">
+      <!-- kth-granska-error-taxonomy.md §10(a): "kommer" (future
+           auxiliary) requires "att" before a following infinitive,
+           unlike English "will" + bare infinitive; omitting it is a
+           common calque error ("Vi kommer spela" for "Vi kommer att
+           spela"). Distinct from the missing-verb-entirely roadmap
+           item (§10 e/f, the actual `MissingVerbRule` port target,
+           a much harder and riskier chunking problem); this is a
+           simple, deterministic two-token pattern instead. "kommer"
+           followed directly by a non-infinitive word (hem, imorgon,
+           en pronoun as in a question) doesn't match, so no separate
+           exception needed for those.
+
+           First corpus run: 3 false positives, both from common
+           adverbs that also carry a rare verb-infinitive reading:
+           "så" (also "to sow", e.g. "kommer så långt" = "get that
+           far", not the verb) and "nära" (also "to nourish", e.g.
+           "kommer nära" = "gets close", not the verb).
+
+           Verified against the full 17,760-sentence Talbanken+LinES
+           corpus via TreebankRuleRegressionCheck: 0 false positives,
+           same bar as every other rule in this file. -->
+      <pattern>
+        <token>kommer</token>
+        <token postag="VB:INF">
+          <exception regexp="yes">så|nära</exception>
+        </token>
+      </pattern>
+      <message>Efter "kommer" i betydelsen "ska/tänker" krävs infinitivmärket "att". Menade du: <suggestion>kommer att \2</suggestion>?</message>
+      <example correction="kommer att spela">Vi <marker>kommer spela</marker> en låt ikväll.</example>
+      <example>Vi kommer att spela en låt ikväll.</example>
+      <example>Han kommer hem sent.</example>
+      <example>Kommer du imorgon?</example>
+      <example>Jag undrar just om jag kommer så långt.</example>
+      <example>Han kommer nära otrygghetens tröskel.</example>
+    </rule>
     <rule id="ART_VB.n-ord" name="Rätt kongruensböjning av artikel">
       <pattern>
         <token>ett</token>
