@@ -312,6 +312,97 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
          rather than tag-based inference, or requiring a determiner
          anchor as every other rule in this file already does). See
          implementation-plan.md for the full investigation. -->
+    <rule id="ETT_JJ.UTRUM_t-ord.NN" name="Rätt obestämd artikel och adjektivböjning (en/ett)">
+      <!-- roadmap.md Phase C2 item 3 ("ett stort villa"-class,
+           agreement-rule-design.md §4 item 3): determiner and
+           adjective agree with EACH OTHER (both neutrum: "ett stort"),
+           but not with the noun's actual gender ("villa" is utrum,
+           "en villa"). The inverse gap from JJ.OBESTAMD_bestamd.NN
+           above: that rule catches determiner+noun agreeing but the
+           adjective not matching either; this one catches
+           determiner+adjective agreeing but the NOUN not matching
+           either. Both need the three-way check EN.NEUTRAL_n-ord.NN/
+           ETT.UTRUM_t-ord.NN didn't need (no adjective in the way
+           there). Suggestion corrects both the article and the
+           adjective's form together.
+
+           Reuses the exact same noun-side exception list as
+           ETT.UTRUM_t-ord.NN above verbatim: the ambiguity is
+           identical (a genuinely dual-gender or gap-ridden word
+           looking like it needs correcting when it doesn't), an
+           adjective sitting in between doesn't change which nouns are
+           ambiguous. No separate invariant-adjective risk on the
+           middle token the way the rejected bare-adjective rule had:
+           here the adjective is required to already agree with the
+           determiner, so an invariant word like "bra" only fires this
+           rule when the noun is genuinely the wrong gender for the
+           determiner regardless of "bra" itself, a real error either
+           way, not a false positive.
+
+           Known miss, not a false positive: "villa" itself, this
+           class's own KTH-taxonomy example word ("ett stort villa"),
+           can't be caught here, it shares a spelling with the verb
+           "villa" (to mislead) and so carries a VB:IMP/VB:INF reading
+           that the generic JJ/VB exclusion above (needed for the real
+           participle/homograph noise found on every sibling rule)
+           also excludes it under. Accepted: the same precision-over-
+           recall bias as the rest of this project, catching "ett
+           stort bil" instead demonstrates the same mechanism cleanly.
+
+           Corpus run also found "öra" (ear) genuinely dual-tagged
+           NN:NEU/NN:UTR like several words on the sibling rules'
+           lists, and on the mirror rule below, "öl" (dual-tagged, "en
+           öl" is completely normal colloquial usage even where a
+           formal NEU reading exists too, same shape as kaffe/te/
+           martini), "före" (a rare NN:NEU reading colliding with the
+           fixed "före detta" idiom, same idiom already documented on
+           DETTA.UTRUM_t-ord.NN elsewhere in this file), and "dosis"
+           (genuinely dual-tagged, a loanword with variable gender in
+           practice). All excepted by name on their respective rule.
+
+           Verified against the full 17,760-sentence Talbanken+LinES
+           corpus via TreebankRuleRegressionCheck: 0 false positives,
+           same bar as every other rule in this file. -->
+      <pattern>
+        <token>ett</token>
+        <token postag="JJ:PN">
+          <exception postag="JJ:BF"/>
+          <exception regexp="yes">blå|grå|rosa|lila|beige|orange|medelålders|vid</exception>
+        </token>
+        <token postag="NN:OF:SIN:.*:UTR" postag_regexp="yes">
+          <exception regexp="yes">för|med|öga|öra|urinprov|kvarter|val|faktum|halvsekel|pris|fotografi|agn|as|bak|bål|beta|bete|borr|byk|damm|fax|galler|glycin|grand|grund|hov|imperativ|intervall|kast|klick|knarr|labb|lag|lager|lägg|lår|led|lock|lov|moj|napp|nöt|pick|pip|plan|plugg|ras|rev|reversal|schack|skrot|slask|snack|snitt|snurr|spann|spänn|stubb|sudd|sug|telefax|test|ton|trav|vad|var|vara|varp</exception>
+          <exception postag="JJ:.*|VB:.*" postag_regexp="yes"/>
+        </token>
+      </pattern>
+      <message>Substantivet "\3" är utrum (en-ord) och kräver då "en" och adjektivets utrumform. Menade du: <suggestion>en <match no="2" postag="JJ:PU"/> \3</suggestion>?</message>
+      <example correction="en stor bil">Vi köpte <marker>ett stort bil</marker>.</example>
+      <example>Ett stort hus stod på kullen.</example>
+      <example>Han har ett bra betyg i matte.</example>
+      <example>Vi lyssnade med ett halvt öra.</example>
+    </rule>
+    <rule id="EN_JJ.NEUTRAL_n-ord.NN" name="Rätt obestämd artikel och adjektivböjning (en/ett)">
+      <!-- Mirror of ETT_JJ.UTRUM_t-ord.NN above; see that rule's
+           comment. Reuses EN.NEUTRAL_n-ord.NN's exact noun-side
+           exception list. -->
+      <pattern>
+        <token>en</token>
+        <token postag="JJ:PU">
+          <exception postag="JJ:BF"/>
+          <exception regexp="yes">blå|grå|rosa|lila|beige|orange|medelålders|vid</exception>
+        </token>
+        <token postag="NN:OF:SIN:.*:NEU" postag_regexp="yes">
+          <exception regexp="yes">grund|var|vara|kaffe|te|martini|djup|s|gräns|lag|slags|titan|ö|öl|före|dosis|åldrande|duns|väl|agn|as|bak|bål|beta|bete|borr|byk|damm|fax|galler|glycin|grand|hov|imperativ|intervall|kast|klick|knarr|kvarter|labb|lager|lägg|lår|led|lock|lov|moj|napp|nöt|pick|pip|plan|plugg|pris|ras|rev|reversal|schack|skrot|slask|snack|snitt|snurr|spann|spänn|stubb|sudd|sug|telefax|test|ton|trav|vad|val|varp</exception>
+          <exception postag="JJ:.*|VB:.*" postag_regexp="yes"/>
+        </token>
+      </pattern>
+      <message>Substantivet "\3" är neutrum (ett-ord) och kräver då "ett" och adjektivets neutrumform. Menade du: <suggestion>ett <match no="2" postag="JJ:PN"/> \3</suggestion>?</message>
+      <example correction="ett stort hus">Vi köpte <marker>en stor hus</marker>.</example>
+      <example>En stor villa stod på kullen.</example>
+      <example>Hon har en bra idé.</example>
+      <example>Han kunde lika gärna ta en vanlig öl.</example>
+      <example>Han var en amerikansk före detta reklamdirektör.</example>
+      <example>Jag drev omkring med en stadig dosis av orienten.</example>
+    </rule>
     <rule id="JJ.OBESTAMD_bestamd.NN" name="Rätt böjning av adjektivet (bestämd form)">
       <!-- roadmap.md Phase C2 item 2 ("den gult villan"-class,
            agreement-rule-design.md §4 item 2): determiner and noun
