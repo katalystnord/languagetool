@@ -312,6 +312,77 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
          rather than tag-based inference, or requiring a determiner
          anchor as every other rule in this file already does). See
          implementation-plan.md for the full investigation. -->
+    <rule id="JJ.OBESTAMD_bestamd.NN" name="Rätt böjning av adjektivet (bestämd form)">
+      <!-- roadmap.md Phase C2 item 2 ("den gult villan"-class,
+           agreement-rule-design.md §4 item 2): determiner and noun
+           already agree with each other (that's DEN.JJ.NEUTRAL_n-ord.NN
+           /DET.JJ.UTRUM_t-ord.NN's job below), but the adjective is
+           wrongly left in indefinite form (JJ:PU/PN, e.g. "gult")
+           instead of the definite form every attributive adjective
+           needs in a definite NP (JJ:BF, e.g. "gula"). Unlike every
+           gender-mismatch rule in this file, this one needs no gender
+           check at all: JJ:BF is invariant across gender, so "den
+           gula villan" and "det gula huset" both correctly use "gula"
+           regardless of den/det. Deliberately not restricted to a
+           specific gender's determiner or noun for that reason; den
+           and det both feed the same check.
+
+           The exception on JJ:BF (rather than a word list) generically
+           excludes every invariant/ambiguous adjective this file has
+           found so far (bra, hela, yttre, rätt, ...): all of them
+           carry a genuine JJ:BF reading alongside their PU/PN one, so
+           excepting "has a JJ:BF reading" closes that whole class at
+           once, the same generalization that worked for the JJ/VB
+           exclusion on EN.NEUTRAL_n-ord.NN above.
+
+           First corpus run: 11 false positives, none from an
+           open-ended class this time, all from a real, small
+           dictionary gap: invariant color adjectives (blå, grå, and
+           presumably the same small closed set of basic colors:
+           rosa, lila, beige, orange) have NO JJ:BF reading in this
+           dictionary at all despite being completely correct in
+           definite position ("den blå bilen" is standard Swedish),
+           unlike bra/hela/yttre/rätt which do carry one. Also
+           "medelålders" (invariant, no gender/number/definiteness
+           inflection at all) and "vid" (here a preposition, "at/by",
+           misread as its rare JJ:PU adjective sense with no
+           corresponding JJ:BF, the same shape of homograph collision
+           documented throughout this file). Excepted by name since
+           the dictionary gap can't be closed generically from here.
+
+           Second corpus run surfaced one more: "gällt" (supine of
+           "gälla", to concern/apply, e.g. "det [har] gällt X") carries
+           a spurious JJ:PN reading with no JJ:BF, a verb/adjective
+           homograph rather than a real agreement error ("det gällt
+           kvinnans ... frigörelse" is "when it [has] applied to
+           women's ... liberation", not a noun phrase at all). Rather
+           than except "gällt" by name, excluding any token that also
+           carries a VB reading closes this generically, the same
+           generalization already used for the -ande participle class
+           on EN.NEUTRAL_n-ord.NN/ETT.UTRUM_t-ord.NN above.
+
+           Verified against the full 17,760-sentence Talbanken+LinES
+           corpus via TreebankRuleRegressionCheck: 0 false positives,
+           same bar as every other rule in this file. -->
+      <pattern>
+        <token regexp="yes">den|det</token>
+        <token postag="JJ:PU|JJ:PN" postag_regexp="yes">
+          <exception postag="JJ:BF"/>
+          <exception postag="VB:.*" postag_regexp="yes"/>
+          <exception regexp="yes">blå|grå|rosa|lila|beige|orange|medelålders|vid</exception>
+        </token>
+        <token postag="NN:BF:.*" postag_regexp="yes"/>
+      </pattern>
+      <message>Adjektivet "\2" står i obestämd form men bör böjas i bestämd form eftersom det följs av ett substantiv i bestämd form. Menade du: <suggestion>\1 <match no="2" postag="JJ:BF"/> \3</suggestion>?</message>
+      <example correction="den gula villan">Vi såg <marker>den gult villan</marker>.</example>
+      <example>Han valde den grå slipsen.</example>
+      <example>Han såg den blå kartan på väggen.</example>
+      <example>Han kände sig som den medelålders släktingen.</example>
+      <example>Jag slog upp den vid bokmärket.</example>
+      <example>Det har sedan gått saktare när det gällt kvinnans frigörelse.</example>
+      <example>Han klarar det bra.</example>
+      <example>Jag såg den hela tiden.</example>
+    </rule>
     <rule id="DEN.JJ.NEUTRAL_n-ord.NN" name="Rätt bestämd artikel (den/det)">
       <pattern>
         <token>den</token>
