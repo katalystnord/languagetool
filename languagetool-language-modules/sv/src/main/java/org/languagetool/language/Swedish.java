@@ -118,6 +118,7 @@ public class Swedish extends LanguageWithModel {
             new MultipleWhitespaceRule(messages, this),
             new SentenceWhitespaceRule(messages),
             new CompoundRule(messages, this, userConfig),
+            new SwedishDashRule(messages),
             new CompoundCoherencyRule(messages),
             new MissingVerbRule(messages, this)
     );

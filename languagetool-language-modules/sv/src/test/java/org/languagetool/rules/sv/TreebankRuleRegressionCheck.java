@@ -96,7 +96,8 @@ public final class TreebankRuleRegressionCheck {
       "NAGONSTANS",
       "ATERIGEN",
       "IHOP",
-      "DIGIT_ARING"
+      "DIGIT_ARING",
+      "SWEDISH_DASH_RULE"
     ));
 
     Path treebankDir = Paths.get(System.getProperty("treebank.dir",
