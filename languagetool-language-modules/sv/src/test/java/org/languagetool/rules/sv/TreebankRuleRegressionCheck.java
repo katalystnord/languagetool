@@ -88,7 +88,8 @@ public final class TreebankRuleRegressionCheck {
       "SAMORDNAD_JJ.NEUTRAL_n-ord.NN",
       "SAMORDNAD_JJ.UTRUM_t-ord.NN",
       "EN_AV_GEN.NEUTRAL_n-ord.NN",
-      "ETT_AV_GEN.UTRUM_t-ord.NN"
+      "ETT_AV_GEN.UTRUM_t-ord.NN",
+      "SV_COMPOUND_COHERENCY"
     ));
 
     Path treebankDir = Paths.get(System.getProperty("treebank.dir",

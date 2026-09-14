@@ -116,7 +116,8 @@ public class Swedish extends LanguageWithModel {
             new WordCoherencyRule(messages),
             new MultipleWhitespaceRule(messages, this),
             new SentenceWhitespaceRule(messages),
-            new CompoundRule(messages, this, userConfig)
+            new CompoundRule(messages, this, userConfig),
+            new CompoundCoherencyRule(messages)
     );
   }
 
