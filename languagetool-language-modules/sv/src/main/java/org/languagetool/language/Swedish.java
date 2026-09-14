@@ -113,6 +113,7 @@ public class Swedish extends LanguageWithModel {
             new UppercaseSentenceStartRule(messages, this),
             new LongSentenceRule(messages, userConfig, 40),
             new WordRepeatRule(messages, this),
+            new SwedishWordRepeatBeginningRule(messages, this),
             new WordCoherencyRule(messages),
             new MultipleWhitespaceRule(messages, this),
             new SentenceWhitespaceRule(messages),
