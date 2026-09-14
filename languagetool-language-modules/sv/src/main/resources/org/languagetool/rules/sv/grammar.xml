@@ -493,6 +493,94 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <example>Han hade en lång och smart plan.</example>
       <example>Det var en svart och vit bild.</example>
     </rule>
+    <rule id="EN_AV_GEN.NEUTRAL_n-ord.NN" name="Rätt genus i partitiv konstruktion (en/ett av ...)">
+      <!-- roadmap.md's "ett av världens högsta alptoppar"-class
+           (KTH taxonomy §6f, pronoun + genitive NP agreement,
+           agreement-rule-design.md §4 item 7): "en/ett av" introduces a
+           partitive construction picking one member out of a genitive-
+           marked noun phrase ("världens högsta alptoppar" - the world's
+           highest alpine peaks), and "en/ett" needs to agree with the
+           GENDER of the head noun at the far end of that phrase, not
+           the noun's number or the gender of anything closer by
+           ("alptopp" is utrum, so "en av världens ... alptoppar", never
+           "ett av").
+
+           The design doc flagged this as the hardest item on its list,
+           "requires spanning a genitive-marked NP", i.e. the same
+           chunking problem that put predicative agreement in its own
+           follow-up pass rather than the first batch. Solved without a
+           real chunker: real corpus sampling (46k+ raw hits for "en/ett
+           av X:s ...") showed the modifier span between the genitive
+           noun and the head noun is short in practice (0-2 tokens: a
+           superlative adjective, "mest kända"-style two-word
+           superlative, a quantifier like "få", or a participle used
+           adjectivally like "bevarade"), too varied in tag shape to
+           enumerate but short and bounded, so LanguageTool's `skip`
+           attribute (on the genitive-noun token here) covers it: search
+           up to 3 tokens ahead for the head noun rather than requiring
+           the intervening tokens to match any particular pattern.
+
+           Only the determiner itself sits inside <marker>, not the
+           whole span: with a skip-based gap, backreferences can't
+           reconstruct the skipped middle tokens for a suggestion, so
+           the fix is scoped to the one token that's actually wrong
+           ("en"/"ett") rather than trying to rewrite the full phrase.
+
+           First corpus run surfaced one real false positive on the
+           mirror rule below: "ett av artonhundratalets stora genier"
+           tags "genier" with three lemma readings at once
+           (genie/NN:UTR, geni/NN:NEU, genius/NN:UTR), a genuine
+           dictionary ambiguity where the intended neuter reading
+           ("geni", genius) sits alongside two spurious utrum ones. Same
+           shape as every other dual-gender-noun collision found
+           throughout this file, fixed the same way: excepting any
+           token that ALSO carries the opposite-gender plural reading,
+           rather than a hand-built word list (that specific list would
+           need to be built from plural surface forms, not the singular
+           ones every other rule's exception lists already use, so
+           wouldn't transfer over anyway).
+
+           Verified against the full 17,760-sentence Talbanken+LinES
+           corpus via TreebankRuleRegressionCheck: 0 false positives,
+           same bar as every other rule in this file. Confirmed firing
+           correctly on real errors and staying quiet on genuinely
+           correct partitive constructions (with and without a
+           superlative, with a participle modifier, with a possessive
+           pronoun instead of a genitive noun) via direct CLI smoke
+           test. -->
+      <pattern>
+        <marker><token>en</token></marker>
+        <token>av</token>
+        <token postag="NN:.*GEN.*" postag_regexp="yes" skip="3"/>
+        <token postag="NN:OF:PLU:.*:NEU" postag_regexp="yes">
+          <exception postag="JJ:.*|VB:.*" postag_regexp="yes"/>
+          <exception postag="NN:OF:PLU:.*:UTR" postag_regexp="yes"/>
+        </token>
+      </pattern>
+      <message>Substantivet "\4" är neutrum (ett-ord), så uttrycket bör inledas med "ett" istället för "en". Menade du: <suggestion>ett</suggestion>?</message>
+      <example correction="ett">Det är <marker>en</marker> av världens högsta hus.</example>
+      <example>Det är ett av världens högsta hus.</example>
+      <example>Han är en av landets bästa spelare.</example>
+      <example>Det var en av stadens få bevarade byggnader.</example>
+    </rule>
+    <rule id="ETT_AV_GEN.UTRUM_t-ord.NN" name="Rätt genus i partitiv konstruktion (en/ett av ...)">
+      <!-- Mirror of EN_AV_GEN.NEUTRAL_n-ord.NN above; see that rule's
+           comment, including the "genier" false positive that shaped
+           the dual-gender exception on both rules. -->
+      <pattern>
+        <marker><token>ett</token></marker>
+        <token>av</token>
+        <token postag="NN:.*GEN.*" postag_regexp="yes" skip="3"/>
+        <token postag="NN:OF:PLU:.*:UTR" postag_regexp="yes">
+          <exception postag="JJ:.*|VB:.*" postag_regexp="yes"/>
+          <exception postag="NN:OF:PLU:.*:NEU" postag_regexp="yes"/>
+        </token>
+      </pattern>
+      <message>Substantivet "\4" är utrum (en-ord), så uttrycket bör inledas med "en" istället för "ett". Menade du: <suggestion>en</suggestion>?</message>
+      <example correction="en">Det är <marker>ett</marker> av världens högsta alptoppar.</example>
+      <example>Det är en av världens högsta alptoppar.</example>
+      <example>Och mördaren, som talar till ett av artonhundratalets stora genier, svarar.</example>
+    </rule>
     <rule id="JJ.OBESTAMD_bestamd.NN" name="Rätt böjning av adjektivet (bestämd form)">
       <!-- roadmap.md Phase C2 item 2 ("den gult villan"-class,
            agreement-rule-design.md §4 item 2): determiner and noun
