@@ -173,6 +173,47 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <message>Felaktig särskrivning. Enligt Språkrådet och SAOL skrivs "ihop" alltid ihop. Menade du <suggestion>ihop</suggestion>?</message>
       <example correction="ihop">De två delarna sattes <marker>i hop</marker>.</example>
     </rule>
+    <rule id="DIGIT_ARING" name="Bindestreck saknas i 'X-åring'">
+      <!-- roadmap.md's digit/abbreviation/name-anchored särskrivning
+           class, sourced from Vasari (2012, Jyväskylä master's thesis
+           on särskrivning in Swedish discussion forums), whose corpus
+           study found ~40% of all real särskrivning errors were
+           actually missing-hyphen errors after a digit/abbreviation/
+           name, not full word-splitting with a space, a structurally
+           narrower and more anchorable problem than the open
+           noun+noun compound case rejected earlier this project (see
+           implementation-plan.md). Directly comparable to German's
+           own numeral-anchored PotentialCompoundFilter rules in
+           upstream grammar.xml: anchoring to a rare, structurally
+           distinctive context (immediately after a bare digit) rather
+           than trying to catch the general case everywhere.
+
+           "åring"/"åringar" (a/several N-year-old(s)) has no other
+           standalone meaning in Swedish, so unlike "talet" (also
+           checked and rejected for this pattern, since "tal" also
+           means "number" and collides directly: "exponenten 4 talet
+           15" is a genuine, unrelated construction, confirmed via a
+           real corpus sample, not an error), this pair carries no
+           homograph risk.
+
+           Corpus evidence (2.84GB web+Wikipedia corpus): 2,529 real
+           occurrences of "<digit> åring" against 7,324 of the correct
+           "<digit>-åring" (roughly 1 in 4 wrong), and 1,026 of
+           "<digit> åringar" against 2,032 of "<digit>-åringar" (about
+           1 in 3 wrong); sampled directly, every occurrence checked
+           meant "an N-year-old", no false-positive class found.
+
+           Verified against the full 17,760-sentence Talbanken+LinES
+           corpus via TreebankRuleRegressionCheck: 0 false positives,
+           same bar as every other rule in this file. -->
+      <pattern>
+        <token regexp="yes">\d+</token>
+        <token regexp="yes">åring|åringar</token>
+      </pattern>
+      <message>Efter en siffra skrivs "\2" med bindestreck. Menade du <suggestion>\1-\2</suggestion>?</message>
+      <example correction="17-åring">Han var en <marker>17 åring</marker> när det hände.</example>
+      <example>Han var en 17-åring när det hände.</example>
+    </rule>
   </category>
   <!-- ====================================================================== -->
   <!-- Punkter efter förkortningar -->
