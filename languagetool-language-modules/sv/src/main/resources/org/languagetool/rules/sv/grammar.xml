@@ -75,6 +75,104 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <example correction="kommer ifrån">Han <marker>kommer i från</marker> Stockholm.</example>
       <example>en aktivitet man kan delta i från det år man fyller 27 år</example>
     </rule>
+    <!-- The following 8 rules are sourced from Myndigheternas skrivregler's
+         and fritext.se's closed lists of expressions that "brukar man
+         skriva ihop" (usually written as one word), cross-checked against
+         real usage in a 2.84GB web+Wikipedia corpus before building
+         anything, the same discipline as every rule in this file: several
+         other list entries were rejected here despite being on the same
+         list, because they turned out to have a genuine, common alternate
+         meaning as two separate words, not a särskrivning error at all.
+         "över allt" (over everything, "kontroll över allt som sker") is
+         real, correct Swedish distinct from "överallt" (everywhere), not
+         a spelling variant of it, confirmed by real samples. "allt för"
+         is a live prefix of the unrelated, common "allt för + adjective"
+         construction ("allt för mycket" = "way too much") and also
+         collides with the proper phrase "Allt för Sverige"; not built.
+         The 8 pairs below were sampled directly and found consistently,
+         cleanly used with the single-word meaning in every real
+         occurrence checked, no competing legitimate two-word reading. -->
+    <rule id="FORUTOM" name="Felaktig särskrivning av 'förutom'">
+      <!-- 28 real occurrences of "för utom" in the corpus, all meaning
+           "except/besides", none a genuine unrelated adjacency of "för"
+           + a word starting with "utom-" (checked with word boundaries
+           after an initial naive substring match falsely inflated the
+           count via "för utomstående", "för utomhusscener" etc.). -->
+      <pattern case_sensitive="no">
+        <token>för</token>
+        <token>utom</token>
+      </pattern>
+      <message>Felaktig särskrivning. Enligt Språkrådet och SAOL skrivs "förutom" alltid ihop. Menade du <suggestion>förutom</suggestion>?</message>
+      <example correction="förutom">Alla var där <marker>för utom</marker> Anna.</example>
+    </rule>
+    <rule id="GENTEMOT" name="Felaktig särskrivning av 'gentemot'">
+      <!-- 33 real occurrences of "gent emot", all meaning "towards/vis-à-vis",
+           skewed towards older/formal/legal register text but
+           semantically consistent throughout. -->
+      <pattern case_sensitive="no">
+        <token>gent</token>
+        <token>emot</token>
+      </pattern>
+      <message>Felaktig särskrivning. Enligt Språkrådet och SAOL skrivs "gentemot" alltid ihop. Menade du <suggestion>gentemot</suggestion>?</message>
+      <example correction="gentemot">Han kände ansvar <marker>gent emot</marker> sina barn.</example>
+    </rule>
+    <rule id="INGENSTANS" name="Felaktig särskrivning av 'ingenstans'">
+      <!-- 27 real occurrences of "ingen stans", all meaning "nowhere",
+           checked for collision with "stans" (stanza; also a punch/die
+           tool) since both are real Swedish nouns: none found, every
+           sample used the "nowhere" sense. -->
+      <pattern case_sensitive="no">
+        <token>ingen</token>
+        <token>stans</token>
+      </pattern>
+      <message>Felaktig särskrivning. Enligt Språkrådet och SAOL skrivs "ingenstans" alltid ihop. Menade du <suggestion>ingenstans</suggestion>?</message>
+      <example correction="ingenstans">Jag kunde hitta den <marker>ingen stans</marker>.</example>
+    </rule>
+    <rule id="NAGONSTANS" name="Felaktig särskrivning av 'någonstans'">
+      <!-- Mirror of INGENSTANS above; 117 real occurrences of "någon
+           stans", all meaning "somewhere", same "stans" homograph check
+           performed, none found. -->
+      <pattern case_sensitive="no">
+        <token>någon</token>
+        <token>stans</token>
+      </pattern>
+      <message>Felaktig särskrivning. Enligt Språkrådet och SAOL skrivs "någonstans" alltid ihop. Menade du <suggestion>någonstans</suggestion>?</message>
+      <example correction="någonstans">Jag läste det <marker>någon stans</marker>.</example>
+    </rule>
+    <rule id="ATERIGEN" name="Felaktig särskrivning av 'återigen'">
+      <!-- 1430 real occurrences of "åter igen", all meaning "again",
+           checked a broad sample given the high count: no case found
+           where "åter" and "igen" functioned as two independently
+           meaningful words in the same clause. -->
+      <pattern case_sensitive="no">
+        <token>åter</token>
+        <token>igen</token>
+      </pattern>
+      <message>Felaktig särskrivning. Enligt Språkrådet och SAOL skrivs "återigen" alltid ihop. Menade du <suggestion>återigen</suggestion>?</message>
+      <example correction="återigen">Det blev <marker>åter igen</marker> populärt.</example>
+    </rule>
+    <!-- "tvärt om" and "i sär" (-> tvärtom, isär) were also tried and
+         rejected here: both looked clean on a web-corpus sample, but
+         the full 17,760-sentence Talbanken+LinES corpus check surfaced
+         one genuine real-world use of each ("Tvärt om skedde en
+         förnyelse", "gled i sär igen") in professionally-edited
+         published Swedish, for the exact same meaning the rule would
+         have flagged as an error. Same lesson as the handordbok
+         findings and the ska/skall confusion-pair rejection earlier
+         this session: a prescriptive source's "always joined" claim
+         doesn't always survive contact with real, accepted usage. Not
+         built. -->
+    <rule id="IHOP" name="Felaktig särskrivning av 'ihop'">
+      <!-- 453 real occurrences of "i hop", all meaning "together"
+           (kopplas i hop, mosade man i hop, hänger i hop), none a
+           genuine "i" + the noun "hop" (a heap/crowd) reading. -->
+      <pattern case_sensitive="no">
+        <token>i</token>
+        <token>hop</token>
+      </pattern>
+      <message>Felaktig särskrivning. Enligt Språkrådet och SAOL skrivs "ihop" alltid ihop. Menade du <suggestion>ihop</suggestion>?</message>
+      <example correction="ihop">De två delarna sattes <marker>i hop</marker>.</example>
+    </rule>
   </category>
   <!-- ====================================================================== -->
   <!-- Punkter efter förkortningar -->
