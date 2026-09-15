@@ -1517,6 +1517,85 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <example>Jag hade kunnat göra det bättre.</example>
       <example>Han hade kunnat vara mer försiktig.</example>
     </rule>
+    <rule id="MODAL_UTAN_HA" name="Hjälpverbet 'ha' saknas efter modalt hjälpverb i presens">
+      <!-- kth-granska-error-taxonomy.md §10(b)'s other half: "supine
+           without ha". Sourced from SAG (Verbfraser: allmänt § 16,
+           found in the same session while reading the surrounding
+           text for DUBBELSUPINUM above, a few pages earlier in the
+           same chapter). SAG documents that "ha" before a supine
+           complement (e.g. "kan ha sålt") may be omitted after a
+           PRETERITE modal (kunde, borde, skulle, ville, behövde: "det
+           kunde blivit", "han skulle gärna velat") - common, especially
+           in speech, not an error. But SAG explicitly marks the same
+           omission as ungrammatical when the modal is PRESENT tense,
+           with its own asterisked example: "*Han {bör/kan} inte
+           kommit fram än." This rule targets only that present-tense
+           case; the preterite-modal ellipsis SAG describes as normal
+           is deliberately left alone (already correct, nothing to
+           flag).
+
+           A general mechanism like DUBBELSUPINUM, not a closed list
+           of verb pairs: any VB:SUP-tagged verb directly after one of
+           the five present-tense modals that has a distinct preterite
+           counterpart (kan, bör, ska/skall, vill, behöver; "måste" and
+           "torde" are invariant across tense and so excluded, SAG's
+           own "vid VISSA av de överordnade hjälpverben" (for SOME of
+           the governing auxiliaries) already signals this doesn't
+           apply uniformly). "kan" and "skall" both carry a rare
+           competing noun reading, requiring postag="VB:PRS" on the
+           trigger token rather than a bare literal match rules that
+           out.
+
+           Corpus evidence (2.84GB web+Wikipedia corpus), sampled
+           directly, no legitimate alternate reading found for any:
+           "kan varit" 50 vs "kan ha varit" 1986 (2.5% wrong), "kan
+           blivit" 8 vs "kan ha blivit" 249 (3.1%), "kan gjort" 3 vs
+           "kan ha gjort" 163 (1.8%), "kan sett" 3 vs "kan ha sett" 120
+           (2.4%), "kan tagit" 3 vs "kan ha tagit" 80 (3.5%). "kan
+           kommit" (18 vs 182, 9%) showed real genuine hits too but
+           also visible spam/SEO contamination in this web-crawled
+           corpus among the raw grep results (garbled machine-
+           translated loan/mortgage-ad text); not a reason to doubt
+           the rule itself (the genuine hits found alongside the spam
+           are real, same pattern), just a reminder this corpus isn't
+           purely clean prose and grep-level sampling needs a manual
+           read, not just a count. Only the direct-adjacency case
+           (modal immediately followed by the supine) is covered here;
+           SAG's own asterisked example has a satsadverbial ("inte")
+           between the two, a real gap not attempted this round to
+           keep the pattern simple and the false-positive risk low.
+
+           First corpus run found 2 false positives, both the same
+           sentence: "KPI kan förenklat beskrivas så här." "förenklat"
+           carries both VB:SUP and VB:PPC:NEU readings (this coincides
+           for most Swedish verbs, participle-neuter and supine share
+           a form) and is being used adverbially here, modifying the
+           following passive infinitive "beskrivas" ("can be described
+           in simplified terms"), not as the modal's own complement.
+           Excepted generically rather than by word: any match whose
+           following token is itself verb-tagged (postag "VB.*") is
+           almost certainly this adverbial-participle-before-another-
+           verb shape, not a genuine missing-ha chain, where the
+           supine is normally the chain's last verb. Checked this
+           doesn't just exclude genuine errors instead: real
+           "kan/bör/... gjort"-style hits found during corpus research
+           are followed by an object or nothing, not another verb, so
+           they're unaffected. 0/17,760 false positives after.
+
+           Verified against the full 17,760-sentence Talbanken+LinES
+           corpus via TreebankRuleRegressionCheck, same bar as every
+           other rule in this file. -->
+      <pattern>
+        <token postag="VB:PRS" regexp="yes">kan|bör|ska|skall|vill|behöver</token>
+        <token postag="VB:SUP">
+          <exception scope="next" postag="VB.*" postag_regexp="yes"/>
+        </token>
+      </pattern>
+      <message>Efter "\1" i presens krävs hjälpverbet "ha" framför supinum (till skillnad från efter preteritumformer som "kunde", där det ofta kan uteslutas). Menade du: <suggestion>\1 ha \2</suggestion>?</message>
+      <example correction="kan ha varit">Materialet <marker>kan varit</marker> gräs eller säv.</example>
+      <example>Materialet kan ha varit gräs eller säv.</example>
+      <example>Han kunde varit snällare.</example>
+    </rule>
     <rule id="ART_VB.n-ord" name="Rätt kongruensböjning av artikel">
       <pattern>
         <token>ett</token>
