@@ -19,3 +19,26 @@ Chatbot
 Crowdfunda
 Greenwashing
 Prompting
+
+# Truncated compound-prefix forms used in sammansättningsellips (e.g.
+# "hälso- och sjukvård"), needed so the ELLIPS_* grammar.xml rules'
+# own hyphenated suggestions don't get immediately re-flagged as
+# misspellings by this same speller. Only the 8 of 14 ELLIPS_* stems
+# that actually got flagged when tested directly (2026-09-15); the
+# other 6 (för-, in-, jord-, läs-, vård-, barn-) were already accepted.
+hälso-
+plan-
+hjärt-
+fri-
+studie-
+mark-
+kultur-
+berg-
+Hälso-
+Plan-
+Hjärt-
+Fri-
+Studie-
+Mark-
+Kultur-
+Berg-
