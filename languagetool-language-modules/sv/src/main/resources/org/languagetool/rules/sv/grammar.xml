@@ -214,6 +214,185 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <example correction="17-åring">Han var en <marker>17 åring</marker> när det hände.</example>
       <example>Han var en 17-åring när det hände.</example>
     </rule>
+    <!-- Bindestreck saknas vid sammansättningsellips ("hälso- och
+         sjukvård"): Svenska Akademiens Grammatik (SAG), vol. 4, § 7,
+         documents this construction directly ("substantiv som förled
+         med gemensamt substantiviskt efterled i sammansättning"), with
+         its own real example "Dansk bok- och skyltframställning". The
+         first element's shared final part is elided and marked with a
+         hyphen; missing that hyphen is a real, common orthographic
+         error, not just a style nicety, per Svenska skrivregler.
+
+         Each pair below checked individually against the 2.84GB
+         web+Wikipedia corpus before shipping, same discipline as every
+         other rule in this file: every sampled occurrence of the
+         no-hyphen form genuinely meant the elided compound (no
+         competing legitimate reading found for any pair), and the
+         error rate is real and non-trivial (0.7%-30% depending on the
+         pair). This is a closed list of specific, individually-verified
+         pairs, not a general open-vocabulary mechanism; the general
+         case was investigated and rejected twice earlier in this
+         project (see roadmap.md's split-compound entries) for the
+         same open-ended homograph-collision reasons a plain POS
+         pattern always runs into here. -->
+    <rule id="ELLIPS_HALSO_SJUKVARD" name="Bindestreck saknas i 'hälso- och sjukvård'">
+      <!-- 58 vs 8,211 in the corpus (0.7% wrong). -->
+      <pattern case_sensitive="no">
+        <token>hälso</token>
+        <token>och</token>
+        <token>sjukvård</token>
+      </pattern>
+      <message>Efter "\1" skrivs bindestreck framför "och". Menade du <suggestion>\1- \2 \3</suggestion>?</message>
+      <example correction="hälso- och sjukvård">Han arbetar inom <marker>hälso och sjukvård</marker>.</example>
+      <example>Han arbetar inom hälso- och sjukvård.</example>
+    </rule>
+    <rule id="ELLIPS_FOR_NACKDELAR" name="Bindestreck saknas i 'för- och nackdelar'">
+      <!-- 510 vs 1,216 in the corpus (30% wrong), the highest error rate
+           of any pair in this group; "för" has no other legitimate
+           standalone reading immediately before "och nackdelar", every
+           sampled occurrence meant the elided "fördelar". -->
+      <pattern case_sensitive="no">
+        <token>för</token>
+        <token>och</token>
+        <token>nackdelar</token>
+      </pattern>
+      <message>Efter "\1" skrivs bindestreck framför "och". Menade du <suggestion>\1- \2 \3</suggestion>?</message>
+      <example correction="för- och nackdelar">Vi vägde <marker>för och nackdelar</marker>.</example>
+      <example>Vi vägde för- och nackdelar.</example>
+    </rule>
+    <rule id="ELLIPS_IN_UTCHECKNING" name="Bindestreck saknas i 'in- och utcheckning'">
+      <!-- 14 vs 1,614 in the corpus (0.9% wrong). -->
+      <pattern case_sensitive="no">
+        <token>in</token>
+        <token>och</token>
+        <token>utcheckning</token>
+      </pattern>
+      <message>Efter "\1" skrivs bindestreck framför "och". Menade du <suggestion>\1- \2 \3</suggestion>?</message>
+      <example correction="in- och utcheckning">Hotellet har smidig <marker>in och utcheckning</marker>.</example>
+      <example>Hotellet har smidig in- och utcheckning.</example>
+    </rule>
+    <rule id="ELLIPS_JORD_SKOGSBRUK" name="Bindestreck saknas i 'jord- och skogsbruk'">
+      <!-- 18 vs 1,079 in the corpus (1.7% wrong). -->
+      <pattern case_sensitive="no">
+        <token>jord</token>
+        <token>och</token>
+        <token>skogsbruk</token>
+      </pattern>
+      <message>Efter "\1" skrivs bindestreck framför "och". Menade du <suggestion>\1- \2 \3</suggestion>?</message>
+      <example correction="jord- och skogsbruk">Byn har dominerats av <marker>jord och skogsbruk</marker>.</example>
+      <example>Byn har dominerats av jord- och skogsbruk.</example>
+    </rule>
+    <rule id="ELLIPS_LAS_SKRIVSVARIGHETER" name="Bindestreck saknas i 'läs- och skrivsvårigheter'">
+      <!-- 22 vs 377 in the corpus (5.5% wrong). -->
+      <pattern case_sensitive="no">
+        <token>läs</token>
+        <token>och</token>
+        <token>skrivsvårigheter</token>
+      </pattern>
+      <message>Efter "\1" skrivs bindestreck framför "och". Menade du <suggestion>\1- \2 \3</suggestion>?</message>
+      <example correction="läs- och skrivsvårigheter">Eleven har <marker>läs och skrivsvårigheter</marker>.</example>
+      <example>Eleven har läs- och skrivsvårigheter.</example>
+    </rule>
+    <rule id="ELLIPS_PLAN_BYGGLAGEN" name="Bindestreck saknas i 'plan- och bygglagen'">
+      <!-- 34 vs 1,030 in the corpus (3.2% wrong). -->
+      <pattern case_sensitive="no">
+        <token>plan</token>
+        <token>och</token>
+        <token>bygglagen</token>
+      </pattern>
+      <message>Efter "\1" skrivs bindestreck framför "och". Menade du <suggestion>\1- \2 \3</suggestion>?</message>
+      <example correction="plan- och bygglagen">Ärendet prövas enligt <marker>plan och bygglagen</marker>.</example>
+      <example>Ärendet prövas enligt plan- och bygglagen.</example>
+    </rule>
+    <rule id="ELLIPS_HJART_KARLSJUKDOMAR" name="Bindestreck saknas i 'hjärt- och kärlsjukdomar'">
+      <!-- 35 vs 588 in the corpus (5.6% wrong). -->
+      <pattern case_sensitive="no">
+        <token>hjärt</token>
+        <token>och</token>
+        <token>kärlsjukdomar</token>
+      </pattern>
+      <message>Efter "\1" skrivs bindestreck framför "och". Menade du <suggestion>\1- \2 \3</suggestion>?</message>
+      <example correction="hjärt- och kärlsjukdomar">Studien handlar om <marker>hjärt och kärlsjukdomar</marker>.</example>
+      <example>Studien handlar om hjärt- och kärlsjukdomar.</example>
+    </rule>
+    <rule id="ELLIPS_FRI_RATTIGHETER" name="Bindestreck saknas i 'fri- och rättigheter'">
+      <!-- 18 vs 634 in the corpus (2.8% wrong). -->
+      <pattern case_sensitive="no">
+        <token>fri</token>
+        <token>och</token>
+        <token>rättigheter</token>
+      </pattern>
+      <message>Efter "\1" skrivs bindestreck framför "och". Menade du <suggestion>\1- \2 \3</suggestion>?</message>
+      <example correction="fri- och rättigheter">Grundlagen skyddar medborgarnas <marker>fri och rättigheter</marker>.</example>
+      <example>Grundlagen skyddar medborgarnas fri- och rättigheter.</example>
+    </rule>
+    <rule id="ELLIPS_STUDIE_YRKESVAGLEDARE" name="Bindestreck saknas i 'studie- och yrkesvägledare'">
+      <!-- 20 vs 570 in the corpus (3.4% wrong). -->
+      <pattern case_sensitive="no">
+        <token>studie</token>
+        <token>och</token>
+        <token>yrkesvägledare</token>
+      </pattern>
+      <message>Efter "\1" skrivs bindestreck framför "och". Menade du <suggestion>\1- \2 \3</suggestion>?</message>
+      <example correction="studie- och yrkesvägledare">Skolan har en <marker>studie och yrkesvägledare</marker>.</example>
+      <example>Skolan har en studie- och yrkesvägledare.</example>
+    </rule>
+    <rule id="ELLIPS_MARK_MILJODOMSTOLEN" name="Bindestreck saknas i 'mark- och miljödomstolen'">
+      <!-- 22 vs 735 in the corpus (2.9% wrong). -->
+      <pattern case_sensitive="no">
+        <token>mark</token>
+        <token>och</token>
+        <token>miljödomstolen</token>
+      </pattern>
+      <message>Efter "\1" skrivs bindestreck framför "och". Menade du <suggestion>\1- \2 \3</suggestion>?</message>
+      <example correction="mark- och miljödomstolen">Ärendet prövades i <marker>mark och miljödomstolen</marker>.</example>
+      <example>Ärendet prövades i mark- och miljödomstolen.</example>
+    </rule>
+    <rule id="ELLIPS_KULTUR_FRITIDSNAMNDEN" name="Bindestreck saknas i 'kultur- och fritidsnämnden'">
+      <!-- 34 vs 731 in the corpus (4.4% wrong). -->
+      <pattern case_sensitive="no">
+        <token>kultur</token>
+        <token>och</token>
+        <token>fritidsnämnden</token>
+      </pattern>
+      <message>Efter "\1" skrivs bindestreck framför "och". Menade du <suggestion>\1- \2 \3</suggestion>?</message>
+      <example correction="kultur- och fritidsnämnden">Mötet hölls med <marker>kultur och fritidsnämnden</marker>.</example>
+      <example>Mötet hölls med kultur- och fritidsnämnden.</example>
+    </rule>
+    <rule id="ELLIPS_BERG_DALBANA" name="Bindestreck saknas i 'berg- och dalbana'">
+      <!-- 125 vs 405 in the corpus (24% wrong), the second-highest
+           error rate in this group. -->
+      <pattern case_sensitive="no">
+        <token>berg</token>
+        <token>och</token>
+        <token>dalbana</token>
+      </pattern>
+      <message>Efter "\1" skrivs bindestreck framför "och". Menade du <suggestion>\1- \2 \3</suggestion>?</message>
+      <example correction="berg- och dalbana">Vi åkte en <marker>berg och dalbana</marker> på nöjesfältet.</example>
+      <example>Vi åkte en berg- och dalbana på nöjesfältet.</example>
+    </rule>
+    <rule id="ELLIPS_VARD_OMSORGSBOENDE" name="Bindestreck saknas i 'vård- och omsorgsboende'">
+      <!-- 34 vs 430 in the corpus (7.3% wrong). -->
+      <pattern case_sensitive="no">
+        <token>vård</token>
+        <token>och</token>
+        <token>omsorgsboende</token>
+      </pattern>
+      <message>Efter "\1" skrivs bindestreck framför "och". Menade du <suggestion>\1- \2 \3</suggestion>?</message>
+      <example correction="vård- och omsorgsboende">Hon flyttade till ett <marker>vård och omsorgsboende</marker>.</example>
+      <example>Hon flyttade till ett vård- och omsorgsboende.</example>
+    </rule>
+    <rule id="ELLIPS_BARN_UTBILDNINGSNAMNDEN" name="Bindestreck saknas i 'barn- och utbildningsnämnden'">
+      <!-- 53 vs 894 in the corpus (5.6% wrong). -->
+      <pattern case_sensitive="no">
+        <token>barn</token>
+        <token>och</token>
+        <token>utbildningsnämnden</token>
+      </pattern>
+      <message>Efter "\1" skrivs bindestreck framför "och". Menade du <suggestion>\1- \2 \3</suggestion>?</message>
+      <example correction="barn- och utbildningsnämnden">Beslutet fattades av <marker>barn och utbildningsnämnden</marker>.</example>
+      <example>Beslutet fattades av barn- och utbildningsnämnden.</example>
+    </rule>
   </category>
   <!-- ====================================================================== -->
   <!-- Punkter efter förkortningar -->
