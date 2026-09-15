@@ -113,7 +113,8 @@ public final class TreebankRuleRegressionCheck {
       "ELLIPS_VARD_OMSORGSBOENDE",
       "ELLIPS_BARN_UTBILDNINGSNAMNDEN",
       "DUBBELSUPINUM",
-      "MODAL_UTAN_HA"
+      "MODAL_UTAN_HA",
+      "BISATSORDFOLJD_ATT"
     ));
 
     Path treebankDir = Paths.get(System.getProperty("treebank.dir",
