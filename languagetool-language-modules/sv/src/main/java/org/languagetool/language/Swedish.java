@@ -121,7 +121,9 @@ public class Swedish extends LanguageWithModel {
             new SwedishDashRule(messages),
             new CompoundCoherencyRule(messages),
             new MissingVerbRule(messages, this),
-            new SwedishPassiveSentenceRule(messages, this, userConfig)
+            new SwedishPassiveSentenceRule(messages, this, userConfig),
+            new SwedishReadabilityRule(messages, this, userConfig, true),
+            new SwedishReadabilityRule(messages, this, userConfig, false)
     );
   }
 
