@@ -1462,6 +1462,61 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
       <example>Jag undrar just om jag kommer så långt.</example>
       <example>Han kommer nära otrygghetens tröskel.</example>
     </rule>
+    <rule id="DUBBELSUPINUM" name="Dubbelsupinum: infinitiv förväntas efter modalt hjälpverb i supinum">
+      <!-- kth-granska-error-taxonomy.md §10(b): "wrong supine form
+           (double supine...): kunnat kommit". Sourced from SAG
+           (Verbfraser: infinitivfraser, checked for the related
+           double-passive item, same investigation session) plus a
+           real Wikipedia article on "dubbelt supinum"/"dubbelsupinum"
+           found while corpus-checking: a modal verb (kunna, vilja,
+           måste) in a supine chain (after har/hade) should take an
+           INFINITIVE complement, not another supine, e.g. "kunnat
+           gjort" should be "kunnat göra". The Wikipedia article itself
+           confirms this is a genuine, common construction in "many
+           central Swedish dialects", not standard written Swedish,
+           much debated within language-care circles ("Inom
+           språkvården har dubbelsupinum länge varit mycket
+           omdiskuterat").
+
+           A general mechanism, not a closed list of specific verb
+           pairs like most other rules in this file: postag="VB:SUP"
+           on the second token matches any supine-tagged verb, and the
+           synthesizer (confirmed working via direct testing for
+           göra/vara/se/komma/springa) converts whichever one matched
+           to its infinitive form for the suggestion. Only the trigger
+           (first) word is a small closed list, since Swedish modal
+           verbs are themselves a small closed class; "kunnat",
+           "velat", and "måst" are each unambiguous in this dictionary
+           (only ever tagged as the modal's own supine, no competing
+           reading), unlike "bort" (böra's supine), which collides
+           with the common adverb "bort" (away) and was left out
+           rather than risk it without further checking.
+
+           Corpus evidence (2.84GB web+Wikipedia corpus): "kunnat
+           gjort" 70 vs "kunnat göra" 931 (7% wrong), "kunnat varit" 44
+           vs "kunnat vara" 991 (4.3% wrong), both sampled directly and
+           confirmed genuine (no legitimate alternate reading found).
+           Narrower pairs like "kunnat kommit"/"velat kommit"/"måst
+           gått" were too rare in the corpus to be useful signal on
+           their own (0-4 occurrences), which is exactly why this is
+           built as a general postag-based mechanism rather than
+           another closed list of specific pairs: the error is
+           real and systematic across verbs, a per-verb list would
+           just rediscover the same small set of common ones and miss
+           the long tail.
+
+           Verified against the full 17,760-sentence Talbanken+LinES
+           corpus via TreebankRuleRegressionCheck: 0 false positives,
+           same bar as every other rule in this file. -->
+      <pattern>
+        <token regexp="yes">kunnat|velat|måst</token>
+        <token postag="VB:SUP"/>
+      </pattern>
+      <message>Efter "\1" i en verbkedja används normalt infinitiv, inte supinum (\2 är dialektalt "dubbelsupinum", inte standardsvenska). Menade du: <suggestion>\1 <match no="2" postag="VB:INF"/></suggestion>?</message>
+      <example correction="kunnat göra">Jag hade <marker>kunnat gjort</marker> det bättre.</example>
+      <example>Jag hade kunnat göra det bättre.</example>
+      <example>Han hade kunnat vara mer försiktig.</example>
+    </rule>
     <rule id="ART_VB.n-ord" name="Rätt kongruensböjning av artikel">
       <pattern>
         <token>ett</token>

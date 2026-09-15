@@ -111,7 +111,8 @@ public final class TreebankRuleRegressionCheck {
       "ELLIPS_KULTUR_FRITIDSNAMNDEN",
       "ELLIPS_BERG_DALBANA",
       "ELLIPS_VARD_OMSORGSBOENDE",
-      "ELLIPS_BARN_UTBILDNINGSNAMNDEN"
+      "ELLIPS_BARN_UTBILDNINGSNAMNDEN",
+      "DUBBELSUPINUM"
     ));
 
     Path treebankDir = Paths.get(System.getProperty("treebank.dir",
